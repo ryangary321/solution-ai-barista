@@ -2,6 +2,8 @@
 
 This is a demo app that shows how to build an agent-driven beverage ordering system using Firebase and Google Cloud.
 
+**Explore the demo and its underlying concepts in more detail on the solutions page at https://developers.google.com/solutions/learn/agentic-barista**
+
 AI Barista is an intelligent chatbot application designed to simulate a coffee shop ordering experience. Users can interact with an AI agent to place beverage orders, ask for recommendations, and confirm their selections.
 
 *This project is intended for demonstration purposes only. It is not
