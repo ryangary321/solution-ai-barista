@@ -55,8 +55,8 @@
       enable = true;
       previews = {
         web = {
-          # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-          # and show it in IDX's web preview panel
+          # Run "npm run dev" with PORT set to Firebase Studio's defined port for previews,
+          # and show it in the web preview panel
           cwd = "client/web/angular-customer-app";
           command = ["npm" "run" "start" "--" "--port" "$PORT" "--host" "0.0.0.0" "--disable-host-check"];
           manager = "web";

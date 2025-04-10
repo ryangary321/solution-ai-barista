@@ -16,7 +16,7 @@
 
 export const environment = {
     production: false,
-    // IDX exposed backend URL
+    // URL for the backend. Exposed through the Angular proxy server.
     backendUrl: "/api",
     firebaseConfig: {
         // TODO: Add your Firebase configuration here.

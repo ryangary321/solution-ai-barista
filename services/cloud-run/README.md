@@ -38,14 +38,14 @@ Update the shared libraries used by the backend and frontend by running `npm run
 
 ## Authentication for Cloud services
 
-This backend uses Firestore and Firebase Cloud Storage to store user sessions and data, in addition to Vertex AI. If you are running this app on Project IDX, it will automatically use [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc) when run.
+This backend uses Firestore and Firebase Cloud Storage to store user sessions and data, in addition to Vertex AI. If you are running this app on Firebase Studio, it will automatically use [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc) when run.
 
 If you are running this project locally, follow the steps in the [ADC guide for local development](https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment) to initialize local credentials.
 
 ## Deploy to Google Cloud Run
 
 This project can be deployed directly from source code to Cloud Run.
-Follow the steps in Project IDX to deploy the app.
+Follow the steps in Firebase Studio to deploy the app.
 
 Alternatively you can deploy it from the commandline using the Google Cloud SDK. Follow [the documentation](https://cloud.google.com/run/docs/deploying-source-code) to enable the Cloud Run service and grant the necessary permissions.
 

@@ -9,7 +9,7 @@ intended for use in a production environment.*
 
 ## Try it out today
 
-We recommend trying out this project in Project IDX. Click this button to launch the project in Project IDX and follow the steps below to get started.
+We recommend trying out this project in Firebase Studio. Click this button to launch the project in Firebase Studio and follow the steps below to get started.
 
 <a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2FFirebaseExtended%2Fsolution-ai-barista">
   <picture>
@@ -35,11 +35,11 @@ We recommend trying out this project in Project IDX. Click this button to launch
 1. Create a default Firestore database by navigating to **Firestore** in the console.
 1. [Enable Vertex AI and recommended APIs](https://console.cloud.google.com/vertex-ai) in the Google Cloud console.
 
-### Getting started in Project IDX
+### Getting started in Firebase Studio
 
-1. Open the project in Project IDX.
+1. Open the project in Firebase Studio.
 1. When prompted, select your Firebase project.
-1. Log into Firebase Hosting. Navigate to the "Project IDX" screen and select "Authenticate". Follow the prompts in the terminal.
+1. Log into Firebase Hosting. Navigate to the "Firebase Studio" screen and select "Authenticate". Follow the prompts in the terminal.
 1. Prepare your Firebase project by setting up security rules, TTL configuration and functions for cleaning up data:
    1. Select a Firebase project: `firebase use`.
    2. Deploy Firestore, Storage and Functions: `firebase deploy --only firestore,storage,functions`
@@ -108,7 +108,7 @@ Submit my order
 
 ## Deploying the app
 
-You can deploy the backend and the frontend directly from Project IDX. Follow the on the "Project IDX" screen to deploy the app to Google Cloud Run and Firebase Hosting.
+You can deploy the backend and the frontend directly from Firebase Studio. Follow the on the "Firebase Studio" screen to deploy the app to Google Cloud Run and Firebase Hosting.
 
 Don't forget to deploy Cloud Functions and the Storage and Firestore configurations:
 
