@@ -29,11 +29,15 @@ We recommend trying out this project in Firebase Studio. Click this button to la
 ### Prerequisites
 
 1. A new Firebase project
+   - *We recommended using a new Firebase project for this demo. This [simplifies cleanup](#delete-and-clean-up-deployed-services) to avoid incurring on-going costs after trying out this demo app.*
 1. [Activate billing on your Google Cloud / Firebase Project](https://console.cloud.google.com/billing/linkedaccount?project=_)
 1. [Enable the Anonymous authentication sign-in method](https://firebase.google.com/docs/auth/web/anonymous-auth#before-you-begin) for your project.
    1. You may chose to upgrade your project and enable automatic clean-up of old accounts.
 1. Create a default Firestore database by navigating to **Firestore** in the console.
 1. [Enable Vertex AI and recommended APIs](https://console.cloud.google.com/vertex-ai) in the Google Cloud console.
+
+> [!NOTE]
+> Enabling billing and deploying services may incur a cost. Follow the steps under [Delete and clean up deployed services](#delete-and-clean-up-deployed-services) to remove any deployed services after trying out this demo.
 
 ### Getting started in Firebase Studio
 
@@ -117,6 +121,19 @@ firebase deploy --only firestore,storage,functions
 ```
 
 See [services/cloud-run](services/cloud-run) and [client/web/angular-customer-app](client/web/angular-customer-app) for more details and manual deployment steps.
+
+
+## Delete and clean up deployed services
+
+To avoid continued billing for the resources that you have created as part of trying out this demo app, delete the Firebase project or disable the deployed services.
+
+If you have created a new project to test this app, follow [these steps to delete the project](https://support.google.com/firebase/answer/9137886?hl=en) through the Firebase console.
+
+Alternatively, if you followed the steps to deploy Cloud Firestore, Functions and Cloud Storage for Firebase to an existing project, follow these steps to remove them manually through the console:
+* [Delete data from Cloud Firestore](https://firebase.google.com/docs/firestore/using-console#delete_data)
+* [Delete Cloud Functions](https://firebase.google.com/docs/functions/manage-functions?gen=2nd#delete_functions)
+* [Delete Cloud Storage](https://firebase.google.com/docs/storage/manage-stored-files#delete)
+* [Delete Cloud Run services](https://cloud.google.com/run/docs/managing/services#delete)
 
 ## Additional Information
 
