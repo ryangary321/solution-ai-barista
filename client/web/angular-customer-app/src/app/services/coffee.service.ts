@@ -22,17 +22,22 @@ import { OrderConfirmationMessage } from '../../../../../../shared/orderConfirma
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment, geminiModel } from '../../environments/environment';
 import { LoginService } from './login.service';
+import { getGenerativeModel, Part, TextPart, VertexAI } from '@angular/fire/vertexai';
 
 const chatUrl = `${environment.backendUrl}/chat`;
 const approveUrl = `${environment.backendUrl}/approveOrder`;
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class CoffeeService {
   private loginService: LoginService = inject(LoginService);
+  private vertexai = inject(VertexAI);
+  private generativeModel = getGenerativeModel(this.vertexai, {model: geminiModel});
 
   constructor(private http: HttpClient) { }
 
@@ -56,6 +61,21 @@ export class CoffeeService {
   }
   
   sendMessage(request: ChatMessageModel): Observable<ChatResponseModel> {
+    const parts: Array<Part> = new Array();
+    parts.push({text: request.text});
+    if(request.media) {
+      parts.push({inlineData: {data: request.media.downloadUrl, mimeType: request.media.contentType}});
+    }
+
+    this.generativeModel.startChat()
+
+    // this.generativeModel.ch(parts).then((gcr) => 
+    //   {
+    //     gcr.response.text
+    //   }
+    // );
+
+
     return this.http.post<ChatResponseModel>(chatUrl, request, this.getHttpOptions())
     .pipe(
       catchError((err: HttpErrorResponse) => {
