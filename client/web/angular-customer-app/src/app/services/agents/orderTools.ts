@@ -56,6 +56,7 @@ export const clearOrder = () => {
     return getStateOrder().length < 1;
 }
 
+// TODO(@nohe427 / @kroikie / someone else?): This was designed for interrupts. We should maybe make this a button instead of a chat interaction to confirm submitting.
 export const submitOrder = (context, interrupt, resumed) => {
     console.info('[submitOrder] Tool called.', { resumed: resumed });
     if (!resumed) {
