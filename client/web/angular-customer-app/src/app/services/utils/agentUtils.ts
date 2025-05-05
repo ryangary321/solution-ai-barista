@@ -32,5 +32,5 @@ export function beverageToTuple(beverage: BeverageModel): [string, string[]] {
     console.info('[getStateOrder]', { order: getAgentState().inProgressOrder });
     // return ai.currentSession<AgentState>().state?.inProgressOrder || [];
     const state = getAgentState().inProgressOrder || [];
-    return [];
+    return state;
   }

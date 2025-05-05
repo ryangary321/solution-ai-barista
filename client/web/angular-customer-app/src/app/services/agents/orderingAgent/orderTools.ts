@@ -3,7 +3,8 @@ import { BeverageModel } from '../../../../../../../../shared';
 import { getAgentState, updateState } from '../../state/agentState';
 import { beverageToTuple, getStateOrder, updateStateOrder } from '../../utils/agentUtils';
 import { menuAllBeverages } from '../../utils/menuUtils';
-import { generateName } from '../../utils/submissionUtils';
+import { getBaristaRecommendation } from '../recommendationAgent/recommendationTools';
+// import { generateName } from '../../utils/submissionUtils';
 
 /**
  * Creates a BeverageModel object with the given drink name and optional modifiers.
@@ -19,7 +20,7 @@ export const addToOrder = (drink: string, modifiers: string[]) => {
     const order: BeverageModel[] = getStateOrder();
     const count = order.push(beverage);
     updateStateOrder(order);
-    return count;
+    return getAgentState();;
 }
 
 export const updateItem = (index: number, drink: any, modifers: string[]) => {
@@ -37,7 +38,8 @@ export const getOrder = () => {
     console.info('[get_order]', { order: order });
 
     // Convert to tuple list
-    return order.map(beverage => beverageToTuple(beverage));
+    order.map(beverage => beverageToTuple(beverage));
+    return getAgentState();
 }
 
 export const removeItem = (index: number) => {
@@ -46,67 +48,69 @@ export const removeItem = (index: number) => {
     const order = getStateOrder();
     const removedItem = order.splice(index, 1);
     updateStateOrder(order);
-    return beverageToTuple(removedItem[0]);
+    beverageToTuple(removedItem[0]);
+    return getAgentState();
 }
 
 export const clearOrder = () => {
     console.info('[clear_order]');
 
     updateStateOrder([]);
-    return getStateOrder().length < 1;
+    getStateOrder().length < 1;
+    return getAgentState();
 }
 
 // TODO(@nohe427 / @kroikie / someone else?): This was designed for interrupts. We should maybe make this a button instead of a chat interaction to confirm submitting.
-export const submitOrder = (context, interrupt, resumed) => {
-    console.info('[submitOrder] Tool called.', { resumed: resumed });
-    if (!resumed) {
-      // The call has not been resumed and this is the first execution.
-      console.info('Interrupting execution to get user feedback');
-      // Interrupt execution and provide the current order to the user.
-      interrupt({ order: getStateOrder() });
-    }
+export const submitOrder = () => {
+    // console.info('[submitOrder] Tool called.', { resumed: resumed });
+    // if (!resumed) {
+    //   // The call has not been resumed and this is the first execution.
+    //   console.info('Interrupting execution to get user feedback');
+    //   // Interrupt execution and provide the current order to the user.
+    //   interrupt({ order: getStateOrder() });
+    // }
   
-    console.info('[submitOrder] Execution was resumed.', { resumed: resumed });
+    // console.info('[submitOrder] Execution was resumed.', { resumed: resumed });
   
-    // Submit the order if execution has resumed and the user has approved the order.
-    if (resumed && typeof resumed === 'object' && resumed?.approved) {
-      console.info('[submitOrder] User has approved the order.');
-      const order = getStateOrder();
-      if (order.length < 1) {
-        throw new Error('Order is empty');
-      }
-      // Generate a name for this order
-      const orderName = generateName();
+    // // Submit the order if execution has resumed and the user has approved the order.
+    // if (resumed && typeof resumed === 'object' && resumed?.approved) {
+    //   console.info('[submitOrder] User has approved the order.');
+    //   const order = getStateOrder();
+    //   if (order.length < 1) {
+    //     throw new Error('Order is empty');
+    //   }
+    //   // Generate a name for this order
+    //   const orderName = generateName();
   
-      // Verify that there's an authenticated user in the context.
-      if (!context.auth?.uid) {
-        throw new Error('User not authenticated');
-      }
+    //   // Verify that there's an authenticated user in the context.
+    //   if (!context.auth?.uid) {
+    //     throw new Error('User not authenticated');
+    //   }
   
-      // Submit the order and store it under the current user.
-      const submittedOrderStore = new SubmittedOrderStore(context.auth.uid);
+    //   // Submit the order and store it under the current user.
+    //   const submittedOrderStore = new SubmittedOrderStore(context.auth.uid);
   
-      const submittedOrderId = await submittedOrderStore.submitOrder(orderName, order)
-      if (!submittedOrderId) {
-        console.error('[submitOrder] Order submission failed.');
-        throw new Error('Order could not be submitted.');
-      }
-      console.info('[submitOrder] Order successfully submitted.', { orderId: submittedOrderId })
+    //   const submittedOrderId = await submittedOrderStore.submitOrder(orderName, order)
+    //   if (!submittedOrderId) {
+    //     console.error('[submitOrder] Order submission failed.');
+    //     throw new Error('Order could not be submitted.');
+    //   }
+    //   console.info('[submitOrder] Order successfully submitted.', { orderId: submittedOrderId })
   
-      // Flip the orderSubmitted field to notify clients.
-      updateState({
-        ...getAgentState(),
-        orderSubmitted: true
-      });
+    //   // Flip the orderSubmitted field to notify clients.
+    //   updateState({
+    //     ...getAgentState(),
+    //     orderSubmitted: true
+    //   });
   
-      return { status: 'ORDER_SUBMITTED', name: orderName };
+    //   return { status: 'ORDER_SUBMITTED', name: orderName };
     
-    } else {
-      // User has not approved the order.
+    // } else {
+    //   // User has not approved the order.
   
-      console.info('[submitOrder] User has not approved the order.');
-      return { status: 'MAKE_CHANGES' };
-    }
+    //   console.info('[submitOrder] User has not approved the order.');
+    //   return { status: 'MAKE_CHANGES' };
+    // }
 }
 
 export const suggestResponses = (responses: string[]) => {
@@ -115,7 +119,7 @@ export const suggestResponses = (responses: string[]) => {
     const state = getAgentState();
     // Save the suggested respones in the current session.
     updateState({...state, suggestedResponses: responses})
-    return 4;
+    return getAgentState();
 }
 
 
@@ -212,6 +216,10 @@ export const orderingTool: FunctionDeclarationsTool = {
                 }
             }
         },
+        {
+            name: 'recommendation_agent',
+            description: 'A way for the barista agent to recommend drinks to the user.',
+        }
     ]
 }
 
@@ -230,9 +238,11 @@ export function handleOrderingFunctionCall(callName: string, callArgs: any) {
         case 'clear_order':
             return clearOrder();
         case 'submit_order':
-            return submitOrder(callArgs.context, callArgs.interrupt, callArgs.resumed);
+            return submitOrder();
         case 'suggest_responses':
             return suggestResponses(callArgs.responses);
+        case 'recommendation_agent':
+            return getBaristaRecommendation();
         default:
             throw new Error(`Unknown function call: ${callName}`);
     }
