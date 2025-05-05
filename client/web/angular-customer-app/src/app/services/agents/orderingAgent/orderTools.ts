@@ -1,9 +1,9 @@
-import { FunctionDeclarationsTool, Schema } from '@angular/fire/vertexai';
-import { BeverageModel } from '../../../../../../../shared';
-import { getAgentState, updateState } from '../state/agentState';
-import { beverageToTuple, getStateOrder, updateStateOrder } from '../utils/agentUtils';
-import { menuAllBeverages } from '../utils/menuUtils';
-import { generateName } from '../utils/submissionUtils';
+import { FunctionDeclarationsTool, ObjectSchema, Schema, SchemaType } from '@angular/fire/vertexai';
+import { BeverageModel } from '../../../../../../../../shared';
+import { getAgentState, updateState } from '../../state/agentState';
+import { beverageToTuple, getStateOrder, updateStateOrder } from '../../utils/agentUtils';
+import { menuAllBeverages } from '../../utils/menuUtils';
+import { generateName } from '../../utils/submissionUtils';
 
 /**
  * Creates a BeverageModel object with the given drink name and optional modifiers.
@@ -118,12 +118,14 @@ export const suggestResponses = (responses: string[]) => {
     return 4;
 }
 
-export const orderingTool = {
+
+export const orderingTool: FunctionDeclarationsTool = {
     functionDeclarations: [
         {
             name: 'add_to_order',
             description: 'Adds a drink to the customer\'s order with optional modifiers.',
-            parameters: Schema.object({
+            parameters: {
+                type: SchemaType.OBJECT,
                 properties: {
                     drink: Schema.enumString({
                         enum:menuAllBeverages, description:
@@ -133,13 +135,14 @@ export const orderingTool = {
                         items: Schema.string({nullable: true}),
                         description: 'An array of modifiers for the drink (optional).'
                     }),
-                }
-            }),
+                },
+            }
         },
         {
             name: 'update_item',
             description: 'Updates an existing drink in the customer\'s order with new details and modifiers.',
-            parameters: Schema.object({
+            parameters: {
+                type: SchemaType.OBJECT,
                 properties: {
                     index: Schema.number({
                         description: 'The index of the item to update (zero-based).'
@@ -153,7 +156,7 @@ export const orderingTool = {
                         description: 'An array of modifiers for the drink (optional).'
                     }),
                 }
-            }),
+            }
         },
         {
             name: 'get_order',
@@ -162,7 +165,8 @@ export const orderingTool = {
         {
             name: 'add_to_order',
             description: 'Adds a drink to the customer\'s order with optional modifiers.',
-            parameters: Schema.object({
+            parameters: {
+                type: SchemaType.OBJECT,
                 properties: {
                     drink: Schema.enumString({
                         enum:menuAllBeverages, description:
@@ -173,18 +177,19 @@ export const orderingTool = {
                         description: 'An array of modifiers for the drink (optional).'
                     }),
                 }
-            }),
+            }
         },
         {
             name: 'remove_item',
             description: 'Remove the nth (zero-based) item from the order.',
-            parameters: Schema.object({
+            parameters: {
+                type: SchemaType.OBJECT,
                 properties: {
                     index: Schema.string({
                         description: 'The index of the item to remove (zero-based).'
                     }),
                 }
-            }),
+            }
         },
         {
             name: 'clear_order',
@@ -197,14 +202,38 @@ export const orderingTool = {
         {
             name: 'suggest_responses',
             description: 'A list of possible responses to suggest to the user. These are shown on screen and the user can reply with them in the next chat message.',
-            parameters: Schema.object({
+            parameters: {
+                type: SchemaType.OBJECT,
                 properties: {
                     responses: Schema.array({
                         items: Schema.string(),
                         description: "List of replies to show to the user. At most 3 replies can be shown. They should be short and concise. Can be empty."
                     }),
                 }
-            })
+            }
         },
     ]
+}
+
+export function handleOrderingFunctionCall(callName: string, callArgs: any) {
+    switch (callName) {
+        case 'add_to_order':
+            return addToOrder(callArgs.drink, callArgs.modifiers);
+        case 'update_item':
+            return updateItem(callArgs.index, callArgs.drink, callArgs.modifiers);
+        case 'get_order':
+            return getOrder();
+        case 'add_to_oder':
+            return addToOrder(callArgs.drink, callArgs.modifiers);
+        case 'remove_item':
+            return removeItem(callArgs.index);
+        case 'clear_order':
+            return clearOrder();
+        case 'submit_order':
+            return submitOrder(callArgs.context, callArgs.interrupt, callArgs.resumed);
+        case 'suggest_responses':
+            return suggestResponses(callArgs.responses);
+        default:
+            throw new Error(`Unknown function call: ${callName}`);
+    }
 }

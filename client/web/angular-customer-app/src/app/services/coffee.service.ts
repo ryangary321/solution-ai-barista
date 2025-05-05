@@ -21,10 +21,13 @@ import { ChatResponseModel } from '../../../../../../shared/chatResponseModel';
 import { OrderConfirmationMessage } from '../../../../../../shared/orderConfirmationMessage';
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, from, map } from 'rxjs';
 import { environment, geminiModel } from '../../environments/environment';
 import { LoginService } from './login.service';
 import { getGenerativeModel, Part, TextPart, VertexAI } from '@angular/fire/vertexai';
+import { orderingAgentInfo } from './agents/orderingAgent/orderingAgent';
+import { handleOrderingFunctionCall, orderingTool } from './agents/orderingAgent/orderTools';
+import { getAgentState } from './state/agentState';
 
 const chatUrl = `${environment.backendUrl}/chat`;
 const approveUrl = `${environment.backendUrl}/approveOrder`;
@@ -67,7 +70,49 @@ export class CoffeeService {
       parts.push({inlineData: {data: request.media.downloadUrl, mimeType: request.media.contentType}});
     }
 
-    this.generativeModel.startChat()
+    this.generativeModel.generationConfig = {...this.generativeModel.generationConfig, temperature: orderingAgentInfo.config.temperature};
+    const chatSession = this.generativeModel.startChat({
+      systemInstruction: orderingAgentInfo.prompt,
+      tools: [orderingTool],
+    });
+
+    const generationResponse = from(chatSession.sendMessage(parts));
+    return generationResponse.pipe(
+      catchError((err) => {
+        throw err.error;
+      }),
+      map((data) => {
+        const functionCalls = data.response.functionCalls()
+        if(functionCalls !== undefined) {
+          const functionResults: {functionResponse: {name: string, response: any}}[] = [];
+          for (const call of functionCalls) {
+            const result = handleOrderingFunctionCall(call.name, call.args);
+            functionResults.push({functionResponse: {name: call.name, response: JSON.stringify(result)}});
+          }
+          chatSession.sendMessage(functionResults).then((gcr) => {
+            const chatResponse: ChatResponseModel = {
+              role: 'agent',
+              text: gcr.response.text(),
+              suggestedResponses: getAgentState().suggestedResponses || [],
+              readyForSubmission: getAgentState().readyForSubmission || false,
+              orderSubmitted: getAgentState().orderSubmitted || false,
+              order: getAgentState().inProgressOrder || []
+            };
+            return chatResponse;
+          });
+        }
+        const chatResponse: ChatResponseModel = {
+          role: 'agent',
+          text: data.response.text(),
+          suggestedResponses: getAgentState().suggestedResponses || [],
+              readyForSubmission: getAgentState().readyForSubmission || false,
+              orderSubmitted: getAgentState().orderSubmitted || false,
+              order: getAgentState().inProgressOrder || []
+            };
+        return chatResponse;
+      })
+    );
+    
 
     // this.generativeModel.ch(parts).then((gcr) => 
     //   {
@@ -76,16 +121,16 @@ export class CoffeeService {
     // );
 
 
-    return this.http.post<ChatResponseModel>(chatUrl, request, this.getHttpOptions())
-    .pipe(
-      catchError((err: HttpErrorResponse) => {
-        // console.error(err);
-        throw err.error;
-      }),
-      map((data: ChatResponseModel): ChatResponseModel => {
-        return data;
-      })
-    );
+    // return this.http.post<ChatResponseModel>(chatUrl, request, this.getHttpOptions())
+    // .pipe(
+    //   catchError((err: HttpErrorResponse) => {
+    //     // console.error(err);
+    //     throw err.error;
+    //   }),
+    //   map((data: ChatResponseModel): ChatResponseModel => {
+    //     return data;
+    //   })
+    // );
   }
 
   sendOrderApproval(request: OrderConfirmationMessage): Observable<ChatResponseModel>{

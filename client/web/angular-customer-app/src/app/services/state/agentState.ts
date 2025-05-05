@@ -3,13 +3,15 @@ import { BeverageModel } from "../../../../../../../shared";
 let agentState: AgentState = {
     suggestedResponses: [],
     inProgressOrder: [],
-    orderSubmitted: false
+    orderSubmitted: false,
+    readyForSubmission: false,
 };
 
 export const updateState = (state: {
     suggestedResponses: string[],
     inProgressOrder: BeverageModel[],
     orderSubmitted: boolean,
+    readyForSubmission: boolean,
 }) => {
     agentState = state;
 }
@@ -22,5 +24,6 @@ export interface AgentState {
     suggestedResponses: string[];
     inProgressOrder: BeverageModel[];
     orderSubmitted: boolean;
+    readyForSubmission: boolean;
     // lastInterrupt?: ToolRequestPart
 }
