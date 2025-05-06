@@ -4,6 +4,7 @@ import { getAgentState, updateState } from '../../state/agentState';
 import { beverageToTuple, getStateOrder, updateStateOrder } from '../../utils/agentUtils';
 import { menuAllBeverages } from '../../utils/menuUtils';
 import { getBaristaRecommendation } from '../recommendationAgent/recommendationTools';
+import { SubmittedOrderStore } from '../../stores/submittedOrderStore';
 // import { generateName } from '../../utils/submissionUtils';
 
 /**
@@ -30,7 +31,7 @@ export const updateItem = (index: number, drink: any, modifers: string[]) => {
     const order = getStateOrder();
     order[index] = newBeverage;
     updateStateOrder(order);
-    return beverageToTuple(newBeverage);
+    return {updatedBeverage: beverageToTuple(newBeverage)};
 }
 
 export const getOrder = () => {
@@ -61,7 +62,10 @@ export const clearOrder = () => {
 }
 
 // TODO(@nohe427 / @kroikie / someone else?): This was designed for interrupts. We should maybe make this a button instead of a chat interaction to confirm submitting.
-export const submitOrder = () => {
+export const submitOrder = (readyForSubmission: boolean) => {
+    if(readyForSubmission) {
+        updateState({...getAgentState(), readyForSubmission: readyForSubmission});
+    }
     // console.info('[submitOrder] Tool called.', { resumed: resumed });
     // if (!resumed) {
     //   // The call has not been resumed and this is the first execution.
@@ -111,6 +115,7 @@ export const submitOrder = () => {
     //   console.info('[submitOrder] User has not approved the order.');
     //   return { status: 'MAKE_CHANGES' };
     // }
+    return getAgentState();
 }
 
 export const suggestResponses = (responses: string[]) => {
@@ -202,6 +207,14 @@ export const orderingTool: FunctionDeclarationsTool = {
         {
             name: 'submit_order',
             description: 'Submit the order. The user is asked for approval first. If the user has changes this call will return \'MAKE_CHANGES\'. If the order has been submitted, it will return \'SUBMITTED\'.',
+            parameters: {
+                type: SchemaType.OBJECT,
+                properties: {
+                    readyForSubmission: Schema.boolean({
+                        description: 'Is the order ready for submission?'
+                    }),
+                }
+            }
         },
         {
             name: 'suggest_responses',
@@ -238,7 +251,7 @@ export function handleOrderingFunctionCall(callName: string, callArgs: any) {
         case 'clear_order':
             return clearOrder();
         case 'submit_order':
-            return submitOrder();
+            return submitOrder(callArgs.readyForSubmission);
         case 'suggest_responses':
             return suggestResponses(callArgs.responses);
         case 'recommendation_agent':

@@ -29,6 +29,9 @@ import { orderingAgentInfo } from './agents/orderingAgent/orderingAgent';
 import { handleOrderingFunctionCall, orderingTool } from './agents/orderingAgent/orderTools';
 import { getAgentState } from './state/agentState';
 import { ChatHistory } from './state/chatHistory';
+import { SubmittedOrderStore } from './stores/submittedOrderStore';
+import { generateName } from './utils/submissionUtils';
+import { Firestore, getFirestore } from '@angular/fire/firestore';
 
 // const chatUrl = `${environment.backendUrl}/chat`;
 // const approveUrl = `${environment.backendUrl}/approveOrder`;
@@ -41,6 +44,7 @@ import { ChatHistory } from './state/chatHistory';
 export class CoffeeService {
   private loginService: LoginService = inject(LoginService);
   private vertexai = inject(VertexAI);
+  private firestore = inject(Firestore);
   private generativeModel = getGenerativeModel(this.vertexai, {model: geminiModel});
   private chatMessages = new ChatHistory();
   constructor() { }
@@ -64,7 +68,7 @@ export class CoffeeService {
   //   };
   // }
 
-  private async generateResponse(parts: Part[], currentStep: number = 0, maxGenSteps: number = 15) {
+  private async generateResponse(parts: Part[], currentStep: number = 0, maxGenSteps: number = 6) {
     this.generativeModel.generationConfig = {...this.generativeModel.generationConfig, temperature: orderingAgentInfo.config.temperature};
     const chatSession = this.generativeModel.startChat({
       systemInstruction: {role: 'system', parts: [{text: orderingAgentInfo.prompt}]} as Content,
@@ -80,7 +84,9 @@ export class CoffeeService {
         const result = handleOrderingFunctionCall(call.name, call.args);
         functionResults.push({functionResponse: {name: call.name, response: result}});
       }
-      generationResponse = await this.generateResponse(functionResults, currentStep + 1, maxGenSteps);
+      if(currentStep<=maxGenSteps) {
+        generationResponse = await this.generateResponse(functionResults, currentStep + 1, maxGenSteps);
+      }
     }
     return generationResponse;
   }
@@ -172,22 +178,43 @@ export class CoffeeService {
 
   sendOrderApproval(request: OrderConfirmationMessage): Observable<ChatResponseModel>{
 
-    const chatResponse: ChatResponseModel = {
-      role: 'agent',
-      text: "Order submitted",
-      suggestedResponses: getAgentState().suggestedResponses || [],
-      readyForSubmission: getAgentState().readyForSubmission || false,
-      orderSubmitted: true,
-      order: getAgentState().inProgressOrder || []
-    };
-    return from (new Promise<ChatResponseModel>((resolve, reject) => resolve(chatResponse))).pipe(
+    // const chatResponse: ChatResponseModel = {
+    //   role: 'agent',
+    //   text: "Order submitted",
+    //   suggestedResponses: getAgentState().suggestedResponses || [],
+    //   readyForSubmission: getAgentState().readyForSubmission || false,
+    //   orderSubmitted: request.orderApproved,
+    //   order: getAgentState().inProgressOrder || []
+    // };
+
+    return from(new SubmittedOrderStore(
+      this.loginService.idToken.toString(), getFirestore()
+    )
+    .submitOrder(generateName(), getAgentState().inProgressOrder || [])).pipe(
       catchError((err) => {
         throw err.error;
       }),
-      map((data: ChatResponseModel): ChatResponseModel => {
-        return data;
+      map((data) => {
+        const x: ChatResponseModel = {
+          role: 'agent',
+          text: 'orderSubmitted',
+          suggestedResponses: [],
+          readyForSubmission: true,
+          orderSubmitted: true,
+          order: getAgentState().inProgressOrder || []
+        };
+        return x;
       })
     );
+
+    // return from (new Promise<ChatResponseModel>((resolve, reject) => resolve(chatResponse))).pipe(
+    //   catchError((err) => {
+    //     throw err.error;
+    //   }),
+    //   map((data: ChatResponseModel): ChatResponseModel => {
+    //     return data;
+    //   })
+    // );
 
   }
 }

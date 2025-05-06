@@ -28,6 +28,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from "../environments/environment.development";
 import { getVertexAI, provideVertexAI } from '@angular/fire/vertexai';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     provideAuth(() => getAuth()), 
     provideVertexAI(() => getVertexAI()),
+    provideFirestore(() => getFirestore()),
     // provideAppCheck(() => {
     //   const provider = new ReCaptchaEnterpriseProvider(environment.recaptchaEnterpriseKey);
     //   return initializeAppCheck(undefined, { provider, isTokenAutoRefreshEnabled: true });
