@@ -188,7 +188,7 @@ export class CoffeeService {
     // };
 
     return from(new SubmittedOrderStore(
-      this.loginService.idToken.toString(), getFirestore()
+      this.loginService.idToken(), getFirestore()
     )
     .submitOrder(generateName(), getAgentState().inProgressOrder || [])).pipe(
       catchError((err) => {
@@ -197,7 +197,7 @@ export class CoffeeService {
       map((data) => {
         const x: ChatResponseModel = {
           role: 'agent',
-          text: 'orderSubmitted',
+          text: `Order submitted as ${data}`,
           suggestedResponses: [],
           readyForSubmission: true,
           orderSubmitted: true,

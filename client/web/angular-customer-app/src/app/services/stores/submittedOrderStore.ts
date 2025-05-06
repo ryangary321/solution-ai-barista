@@ -68,9 +68,6 @@ export class SubmittedOrderStore {
     await setDoc(userCollection, {
       expiresAt: expirationTime
     });
-    // await updateDoc(userCollection, {
-    //   expiresAt: expirationTime
-    // });
 
     // Convert beverages into a data structure for Firestore.
     const convertedBeverages = beverageConverter.toFirestore(beverages);
@@ -85,6 +82,6 @@ export class SubmittedOrderStore {
             submittedAt: serverTimestamp()
         });
 
-    return docRef.id;
+    return `Order ID : ${docRef.id} with name: ${name}`;
   }
 }
