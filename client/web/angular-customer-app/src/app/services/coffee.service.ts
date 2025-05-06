@@ -68,7 +68,7 @@ export class CoffeeService {
   //   };
   // }
 
-  private async generateResponse(parts: Part[], currentStep: number = 0, maxGenSteps: number = 6) {
+  private async generateResponse(parts: Part[], currentStep: number = 0, maxGenSteps: number = 15) {
     this.generativeModel.generationConfig = {...this.generativeModel.generationConfig, temperature: orderingAgentInfo.config.temperature};
     const chatSession = this.generativeModel.startChat({
       systemInstruction: {role: 'system', parts: [{text: orderingAgentInfo.prompt}]} as Content,

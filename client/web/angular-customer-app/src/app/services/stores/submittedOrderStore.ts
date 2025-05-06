@@ -17,7 +17,7 @@
 import { inject } from '@angular/core';
 import { BeverageModel } from '../../../../../../../shared';
 import { beverageConverter } from './beverageConverter';
-import { addDoc, collection, doc, Firestore, serverTimestamp, Timestamp, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, serverTimestamp, setDoc, Timestamp, updateDoc } from '@angular/fire/firestore';
 
 /**
  * @class SubmittedOrderSTore
@@ -65,9 +65,12 @@ export class SubmittedOrderStore {
     const userCollection = doc(this.firestore, this.collectionName, this.userId);
 
     // Set the expiration time for the entire user collection
-    await updateDoc(userCollection, {
+    await setDoc(userCollection, {
       expiresAt: expirationTime
     });
+    // await updateDoc(userCollection, {
+    //   expiresAt: expirationTime
+    // });
 
     // Convert beverages into a data structure for Firestore.
     const convertedBeverages = beverageConverter.toFirestore(beverages);
