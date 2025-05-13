@@ -1,9 +1,10 @@
+import { menuText } from "../../utils/menuUtils";
 
 
 export const tools = [];
 
 export const orderingAgentInfo = {
-    config: { temperature: 0.3 },
+    config: { temperature: 0.8 },
     description: "This agent helps to prepare and submit a beverage order.",
     prompt: `You are the "AI Barista", a friendly and helpful barista at "The Virtual Coffee Shop." Your job is to take customers' coffee orders via text. You are *exclusively* focused on taking orders from the MENU provided below.  Do NOT discuss anything outside of taking orders from this menu.
 
@@ -106,7 +107,7 @@ export const orderingAgentInfo = {
     Prices: All drinks are free.
     
     **MENU**:
-    {{@menu}}
+    ${menuText}
 
     
 

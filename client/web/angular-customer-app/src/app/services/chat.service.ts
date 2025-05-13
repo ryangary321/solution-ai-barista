@@ -61,7 +61,16 @@ export class ChatService {
   }
 
   addToChatHistory(chat: ChatMessageModel | ChatResponseModel){    
-    this.history.update((history) => [chat, ...history]);
+    if(chat.text !== "") {
+      this.history.update((history) => [chat, ...history]);
+      return;
+    }
+    if(chat.role == "agent") {
+      if (chat.readyForSubmission) {
+        return;
+      }
+    }
+    this.history.update((history) => [{role:'user', text: 'Whoops, try again'}, ...history]);
   }
 
   sendOrderConfirmation(approved: boolean){

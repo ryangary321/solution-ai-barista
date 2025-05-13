@@ -124,7 +124,7 @@ export const suggestResponses = (responses: string[]) => {
     const state = getAgentState();
     // Save the suggested respones in the current session.
     updateState({...state, suggestedResponses: responses})
-    return getAgentState();
+    return {responsesSet: true};
 }
 
 

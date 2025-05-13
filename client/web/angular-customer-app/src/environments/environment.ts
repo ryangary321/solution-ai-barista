@@ -35,9 +35,9 @@ export declare interface BootstrapData {
 
 const bootstrapData = window['APP_TEMPLATE_BOOTSTRAP'] as BootstrapData;
 
-if (!bootstrapData) {
-  window.location.href = '/config.html';
-}
+// if (!bootstrapData) {
+//   window.location.href = '/config.html';
+// }
 
 export const environment = {
   firebase: {
@@ -48,4 +48,4 @@ export const environment = {
   viewCodeMessage: bootstrapData?.viewCodeMessage || '',
 };
 
-export const geminiModel = "gemini-2.5-flash-preview-04-17";
+export const geminiModel = "gemini-2.0-flash";

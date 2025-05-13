@@ -26,7 +26,7 @@ import { geminiModel } from '../../environments/environment';
 import { LoginService } from './login.service';
 import { Content, getGenerativeModel, Part, TextPart, VertexAI } from '@angular/fire/vertexai';
 import { orderingAgentInfo } from './agents/orderingAgent/orderingAgent';
-import { handleOrderingFunctionCall, orderingTool } from './agents/orderingAgent/orderTools';
+import { clearOrder, handleOrderingFunctionCall, orderingTool } from './agents/orderingAgent/orderTools';
 import { getAgentState } from './state/agentState';
 import { ChatHistory } from './state/chatHistory';
 import { SubmittedOrderStore } from './stores/submittedOrderStore';
@@ -82,9 +82,11 @@ export class CoffeeService {
       const functionResults: {functionResponse: {name: string, response: any}}[] = [];
       for (const call of functionCalls) {
         const result = handleOrderingFunctionCall(call.name, call.args);
-        functionResults.push({functionResponse: {name: call.name, response: result}});
+        if(call.name !== "suggest_responses") {
+          functionResults.push({functionResponse: {name: call.name, response: result}});
+        }
       }
-      if(currentStep<=maxGenSteps) {
+      if(currentStep<=maxGenSteps && functionResults.length > 0) {
         generationResponse = await this.generateResponse(functionResults, currentStep + 1, maxGenSteps);
       }
     }
@@ -203,6 +205,7 @@ export class CoffeeService {
           orderSubmitted: true,
           order: getAgentState().inProgressOrder || []
         };
+        clearOrder();
         return x;
       })
     );

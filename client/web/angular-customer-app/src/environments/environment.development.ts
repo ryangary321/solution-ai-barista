@@ -29,4 +29,4 @@ export const environment = {
     recaptchaEnterpriseKey: "",
 };
 
-export const geminiModel = "gemini-2.5-flash-preview-04-17";
+export const geminiModel = "gemini-2.0-flash";
