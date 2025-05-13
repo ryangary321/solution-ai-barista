@@ -19,6 +19,7 @@
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 @import '_theme-colors.scss';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 html {
   @include mat.theme((

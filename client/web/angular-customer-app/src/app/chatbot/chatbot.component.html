@@ -31,7 +31,6 @@
   </div>
 
     <div class="chat-content-area">
-      <div id="chat" class="messages">
         @if (chatService.loading()) {
           <div class="message barista">
             <div class="message-icon-container">
@@ -93,10 +92,10 @@
             </button>
           }
           <button mat-stroked-button class="quick-reply-chip" (click)="ask('Something hot')">
-            <mat-icon>prompt_suggestion</mat-icon> Something hot
+            <mat-icon fontSet="material-symbols-outlined">prompt_suggestion</mat-icon> Something hot
           </button>
           <button mat-stroked-button class="quick-reply-chip" (click)="ask('Something decaf')">
-            <mat-icon>prompt_suggestion</mat-icon> Something decaf
+            <mat-icon fontSet="material-symbols-outlined">prompt_suggestion</mat-icon> Something decaf
           </button>
         </div>
       </div>
