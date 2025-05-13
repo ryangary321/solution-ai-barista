@@ -27,6 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { BeverageModel } from '../../../../../../shared/beverageModel';
 import { MediaModel } from '../../../../../../shared/chatMessageModel';
 import { ChatService } from '../services/chat.service';
@@ -39,6 +40,7 @@ import { OrderDialog } from './order-dialog/order-dialog.component';
   imports: [
     FormsModule,
     MatFormFieldModule,
+    MatExpansionModule,
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
@@ -51,6 +53,7 @@ export class ChatbotComponent {
   chatService: ChatService = inject(ChatService)
   mediaStorageService: MediaStorageService = inject(MediaStorageService);
   dialog = inject(MatDialog)
+  currentOrder = "";
 
   input = signal<string | undefined>(undefined);
   chatFormControl = new FormControl(

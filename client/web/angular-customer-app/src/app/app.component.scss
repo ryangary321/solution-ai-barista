@@ -13,16 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-.wrapper {
+ .wrapper {
   display: grid;
   grid-template:
     'header' auto
     'content' 1fr
     / 1fr;
   height: 100vh;
+  background-color: #FCF8F8;
+}
+
+.custom-toolbar {
+  background-color: #FCF8F8 !important;
+  color: #333;
+  box-shadow: none;
+}
+
+.toolbar-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.css-title-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #FBBC04;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.toolbar-title-container h1 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #3c4043;
+  line-height: 1;
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.custom-toolbar button[mat-icon-button] mat-icon {
+  color: #5f6368;
 }

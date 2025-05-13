@@ -1,4 +1,4 @@
-<!--
+<!-- 
  Copyright 2025 Google LLC
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,69 +13,114 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+<div class="coffee-chat-page">
+  <div class="centered-chat-column">    <div class="order-bar">
+    <mat-expansion-panel class="order-expansion-panel" #orderPanel="matExpansionPanel">
+      <mat-expansion-panel-header class="order-panel-header">
+        <mat-panel-title class="order-title-in-header">
+          Your order
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-<div class="chat center">
-  <div class="contact bar">
-    <div class="pic coffee"></div>
-    <div class="name">Chat with your AI Barista</div>
-    <div class="seen">Today at 11:11am</div>
+      <div class="order-details-content">
+        <div class="order-text-actual">
+          {{ currentOrder || 'No items in your order yet.' }}
+        </div>
+        </div>
+    </mat-expansion-panel>
   </div>
-  <div id="chat" class="messages">
-    @if (chatService.loading()) {
-      <div class="message barista">
-        <div class="typing typing-1"></div>
-        <div class="typing typing-2"></div>
-        <div class="typing typing-3"></div>
-      </div>
-    }
-    @for (entry of chatService.history(); track entry; let i = $index) {
-        @if (entry.role === 'user') {
-          <div class="message user">
-            {{ entry.text }}
-            @if (entry.media && entry.media.downloadUrl) {
-              <img [src]="entry.media.downloadUrl">
-            }
-          </div>
-        }
-        @if (entry.role === 'agent') {
+
+    <div class="chat-content-area">
+      <div id="chat" class="messages">
+        @if (chatService.loading()) {
           <div class="message barista">
-            {{ entry.text }}
+            <div class="message-icon-container">
+              <mat-icon class="barista-icon">coffee</mat-icon>
+            </div>
+            <div class="message-text-container typing-indicator">
+              <div class="typing typing-1"></div>
+              <div class="typing typing-2"></div>
+              <div class="typing typing-3"></div>
+            </div>
           </div>
         }
-    }
-    <div class="time">Today at 11:11am</div>
-  </div>
-  <form class="input">
-    <div class="help">
-      @if (chatService.error()) {
-        <pre class="error">{{ chatService.error()?.text }}</pre>
-      }
-      @for (response of chatService.suggestedResponses(); track response; let index = $index) {
-        <button (click)="ask(response)" mat-flat-button>{{ response }}</button>
-      }
+        @for (entry of chatService.history(); track entry; let i = $index) {
+          @if (entry.role === 'user') {
+            <div class="message user">
+              <div class="message-text-container">
+                {{ entry.text }}
+                @if (entry.media && entry.media.downloadUrl) {
+                  <img [src]="entry.media.downloadUrl" alt="User media">
+                }
+              </div>
+            </div>
+          }
+          @if (entry.role === 'agent') {
+            <div class="message barista">
+              <div class="message-icon-container">
+                <img src="assets/barista-icon.png" class="barista-icon" />
+              </div>
+              <div class="message-text-container">
+                {{ entry.text }}
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="suggestions-container">
+        <div class="product-suggestions">
+          <div class="product-card special">
+            <div class="product-card-text">
+              <h3>Orange Matcha Latte</h3>
+              <span class="suggestion-tag special">Today's special</span>
+            </div>
+            <img src="" alt="Orange Matcha Latte" class="product-image" />
+          </div>
+          <div class="product-card ai">
+            <div class="product-card-text">
+              <h3>Cold foam cold brew</h3>
+              <span class="suggestion-tag bot">Bot suggestion</span>
+            </div>
+            <img src="" alt="Cold foam cold brew" class="product-image" />
+          </div>
+        </div>
+
+        <div class="quick-replies">
+          @for (response of chatService.suggestedResponses(); track response; let index = $index) {
+            <button mat-stroked-button class="quick-reply-chip" (click)="ask(response)">
+              <mat-icon>arrow_forward</mat-icon> {{ response }}
+            </button>
+          }
+          <button mat-stroked-button class="quick-reply-chip" (click)="ask('Something hot')">
+            <mat-icon>prompt_suggestion</mat-icon> Something hot
+          </button>
+          <button mat-stroked-button class="quick-reply-chip" (click)="ask('Something decaf')">
+            <mat-icon>prompt_suggestion</mat-icon> Something decaf
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="forms">
-      <mat-form-field class="form-field" appearance="outline">
-        <mat-label>Chat with our agent</mat-label>
-        <textarea
-          matInput
-          (keypress)="keyPress($event)"
-          [formControl]="chatFormControl"
-          placeholder="Type a message...">
-        </textarea>
-        @if (mediaStorageService.media()) {
-          <img [src]="mediaStorageService.media()?.downloadUrl" class="media-preview">
+
+    <form class="chat-input-bar" (ngSubmit)="ask()">
+      @if (chatService.error()) {
+        <pre class="error-message">{{ chatService.error()?.text }}</pre>
+      }
+    
+      <mat-form-field appearance="outline" class="chat-input-field">
+        <input matInput
+               (keypress)="keyPress($event)"
+               [formControl]="chatFormControl"
+               placeholder="Anything else?"> @if (mediaStorageService.media()) {
+          <img [src]="mediaStorageService.media()?.downloadUrl" class="media-preview-small" alt="Media preview">
         }
       </mat-form-field>
-      <div class="action-grid">
-        <button mat-icon-button (click)="ask()" [disabled]="chatService.loading() || !chatFormControl.value"><mat-icon>send</mat-icon></button>
-        <div></div>
-        <button mat-icon-button (click)="confirmOrder()" [disabled]="chatService.loading()"><mat-icon>coffee</mat-icon></button>
-        <button mat-icon-button (click)="file_input.click()" [disabled]="chatService.loading()">
-          <mat-icon>add_a_photo</mat-icon>
-          <input #file_input type="file" accept="image/*" style="display:none" (change)="setFileData($event)">
-        </button>
-      </div>
-    </div>
-  </form>
-</div>
+    
+      <button mat-icon-button class="action-button add-btn" type="button" (click)="file_input.click()" [disabled]="chatService.loading()" matTooltip="Add attachment">
+        <mat-icon>add</mat-icon> <input #file_input type="file" accept="image/*" style="display:none" (change)="setFileData($event)">
+      </button>
+    
+      <button mat-icon-button class="action-button send-btn" type="submit" [disabled]="chatService.loading() || !chatFormControl.value" matTooltip="Send message">
+        <mat-icon>chevron_right</mat-icon> </button>
+    </form>
+  </div> </div>

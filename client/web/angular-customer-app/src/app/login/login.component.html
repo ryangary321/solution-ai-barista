@@ -14,4 +14,6 @@
  limitations under the License.
 -->
 
-<button mat-icon-button (click)="this.chatService.clearSession()" [disabled]="chatService.loading()"><mat-icon>refresh</mat-icon></button>
+<button mat-menu-item (click)="this.chatService.clearSession()" [disabled]="chatService.loading()">
+    <mat-icon>refresh</mat-icon>
+  </button>

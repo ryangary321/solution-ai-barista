@@ -16,11 +16,16 @@
 
 import { Routes } from '@angular/router';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { OrderpageComponent } from './orderpage/orderpage.component';
 
 export const routes: Routes = [
   {
     path: 'chat',
     component: ChatbotComponent,
+  },
+  {
+    path: 'order',
+    component: OrderpageComponent,
   },
   { path: '**', redirectTo: '/chat' },
 ];

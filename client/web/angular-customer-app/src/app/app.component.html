@@ -13,19 +13,19 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
 <div class="wrapper">
-  <mat-toolbar color="secondary">
-    <h1>Google Solutions</h1>
+  <mat-toolbar class="custom-toolbar">
+    <div class="toolbar-title-container">
+      <span class="css-title-icon"></span>
+      <h1>Coffee Spark</h1>
+    </div>
     <span class="spacer"></span>
-    <a
-      mat-icon-button
-      href="https://developers.google.com/solutions/catalog"
-      matTooltip="Docs"
-      target="_blank">
-      <mat-icon>description</mat-icon>
-    </a>
-    <app-login/>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <app-login />
+    </mat-menu>
   </mat-toolbar>
 
   <article>
