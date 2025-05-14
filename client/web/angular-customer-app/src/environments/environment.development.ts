@@ -14,19 +14,40 @@
  * limitations under the License.
  */
 
+declare const window: any;
+
+export declare interface BootstrapData {
+  firebase: {
+    apiKey?: string;
+    authDomain?: string,
+    databaseURL?: string,
+    projectId?: string,
+    storageBucket?: string,
+    messagingSenderId?: string,
+    measurementId?: string,
+    appId?: string,
+  };
+  geminiApiKey?: string;
+  debugToken?: string;
+  viewCodeLink?: string;
+  viewCodeMessage?: string;
+}
+
+const bootstrapData = window['APP_TEMPLATE_BOOTSTRAP'] as BootstrapData;
+
+console.log(bootstrapData);
+
+if (!bootstrapData) {
+  window.location.href = '/config.html';
+}
+
 export const environment = {
-    production: false,
-    // URL for the backend. Exposed through the Angular proxy server.
-    backendUrl: "/api",
-    firebaseConfig: {
-        apiKey: "AIzaSyBQCxsyNXhVO8Ac-Z8-TbLXc3AnQ4fskH0",
-        authDomain: "free-tier-1000.firebaseapp.com",
-        projectId: "free-tier-1000",
-        storageBucket: "free-tier-1000.firebasestorage.app",
-        messagingSenderId: "255640991092",
-        appId: "1:255640991092:web:8b41dc541ff50ed2fce821"
-    },
-    recaptchaEnterpriseKey: "",
+    ...bootstrapData?.firebase,
+  geminiApiKey: bootstrapData?.geminiApiKey || '',
+  viewCodeLink: bootstrapData?.viewCodeLink || '',
+  viewCodeMessage: bootstrapData?.viewCodeMessage || '',
 };
 
-export const geminiModel = "gemini-2.5-flash-preview-04-17";
+console.log('env',environment)
+
+export const geminiModel = "gemini-2.0-flash";

@@ -1,4 +1,4 @@
-import { Content } from "@angular/fire/vertexai";
+import { Content } from "@angular/fire/ai";
 
 export class ChatHistory {
     messages: Content[];

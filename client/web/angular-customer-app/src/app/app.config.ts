@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideMarkdown } from 'ngx-markdown';
 
@@ -22,12 +22,12 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
 
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { FirebaseApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 // import { initializeAppCheck, provideAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from "../environments/environment.development";
-import { getVertexAI, provideVertexAI } from '@angular/fire/vertexai';
+import { getAI, GoogleAIBackend, provideAI } from '@angular/fire/ai';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 export const appConfig: ApplicationConfig = {
@@ -37,10 +37,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient( withFetch() ),
     provideMarkdown(),
     provideAnimationsAsync(), 
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
+    provideFirebaseApp(() => initializeApp(environment)), 
     provideStorage(() => getStorage()),
     provideAuth(() => getAuth()), 
-    provideVertexAI(() => getVertexAI()),
+    provideAI(() => getAI(inject(FirebaseApp), {backend: new GoogleAIBackend()})),
     provideFirestore(() => getFirestore()),
     // provideAppCheck(() => {
     //   const provider = new ReCaptchaEnterpriseProvider(environment.recaptchaEnterpriseKey);

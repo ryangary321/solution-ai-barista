@@ -1,4 +1,4 @@
-import { FunctionDeclarationsTool, ObjectSchema, Schema, SchemaType } from '@angular/fire/vertexai';
+import { FunctionDeclarationsTool, ObjectSchema, Schema, SchemaType } from '@angular/fire/ai';
 import { BeverageModel } from '../../../../../../../../shared';
 import { getAgentState, updateState } from '../../state/agentState';
 import { beverageToTuple, getStateOrder, updateStateOrder } from '../../utils/agentUtils';
@@ -124,7 +124,7 @@ export const suggestResponses = (responses: string[]) => {
     const state = getAgentState();
     // Save the suggested respones in the current session.
     updateState({...state, suggestedResponses: responses})
-    return getAgentState();
+    return {responsesSet: true};
 }
 
 

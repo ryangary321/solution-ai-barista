@@ -23,9 +23,11 @@ export const routes: Routes = [
     path: 'chat',
     component: ChatbotComponent,
   },
-  {
-    path: 'order',
-    component: OrderpageComponent,
-  },
+  // {
+  //   path: 'order',
+  //   component: OrderpageComponent,
+  // },
+  // { path: '/config.html', redirectTo: '/config.html'},
+  // { path: '/config', redirectTo: '/config.html'},
   { path: '**', redirectTo: '/chat' },
 ];
