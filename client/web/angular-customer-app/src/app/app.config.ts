@@ -37,7 +37,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient( withFetch() ),
     provideMarkdown(),
     provideAnimationsAsync(), 
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
+    provideFirebaseApp(() => initializeApp(environment)), 
     provideStorage(() => getStorage()),
     provideAuth(() => getAuth()), 
     provideVertexAI(() => getVertexAI()),
