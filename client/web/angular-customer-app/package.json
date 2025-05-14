@@ -15,7 +15,7 @@
     "@angular/common": "^19.2.6",
     "@angular/compiler": "^19.2.6",
     "@angular/core": "^19.2.6",
-    "@angular/fire": "^19.1.0",
+    "@angular/fire": "^19.1.0-canary.20bee94",
     "@angular/forms": "^19.2.6",
     "@angular/material": "^19.2.9",
     "@angular/platform-browser": "^19.2.6",
@@ -40,5 +40,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.8.3"
+  },
+  "overrides": {
+    "firebase": "11.8.0-20250512211235"
   }
 }

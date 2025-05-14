@@ -1,4 +1,4 @@
-import { FunctionDeclarationsTool, ObjectSchema, Schema, SchemaType } from '@angular/fire/vertexai';
+import { FunctionDeclarationsTool, ObjectSchema, Schema, SchemaType } from '@angular/fire/ai';
 import { BeverageModel } from '../../../../../../../../shared';
 import { getAgentState, updateState } from '../../state/agentState';
 import { beverageToTuple, getStateOrder, updateStateOrder } from '../../utils/agentUtils';

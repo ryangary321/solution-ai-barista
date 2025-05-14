@@ -24,7 +24,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, from, map } from 'rxjs';
 import { geminiModel } from '../../environments/environment';
 import { LoginService } from './login.service';
-import { Content, getGenerativeModel, Part, TextPart, VertexAI } from '@angular/fire/vertexai';
+import { AI, Content, getGenerativeModel, Part } from '@angular/fire/ai';
 import { orderingAgentInfo } from './agents/orderingAgent/orderingAgent';
 import { clearOrder, handleOrderingFunctionCall, orderingTool } from './agents/orderingAgent/orderTools';
 import { getAgentState } from './state/agentState';
@@ -43,9 +43,9 @@ import { Firestore, getFirestore } from '@angular/fire/firestore';
 })
 export class CoffeeService {
   private loginService: LoginService = inject(LoginService);
-  private vertexai = inject(VertexAI);
+  private ai = inject(AI);
   private firestore = inject(Firestore);
-  private generativeModel = getGenerativeModel(this.vertexai, {model: geminiModel});
+  private generativeModel = getGenerativeModel(this.ai, {model: geminiModel});
   private chatMessages = new ChatHistory();
   constructor() { }
 
