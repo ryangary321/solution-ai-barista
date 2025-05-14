@@ -19,13 +19,14 @@ export const environment = {
     // URL for the backend. Exposed through the Angular proxy server.
     backendUrl: "/api",
     firebaseConfig: {
-        // TODO: Add your Firebase configuration here.
-        // apiKey: "",
-        // authDomain: "",
-        // projectId: "",
-        // storageBucket: "",
-        // messagingSenderId: "",
-        // appId: ""
+        apiKey: "",
+        authDomain: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: ""
     },
     recaptchaEnterpriseKey: "",
 };
+
+export const geminiModel = "gemini-2.0-flash";
