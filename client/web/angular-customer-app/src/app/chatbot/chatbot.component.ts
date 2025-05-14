@@ -15,7 +15,7 @@
  */
 
 
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, WritableSignal } from '@angular/core';
 import {
   FormControl,
   FormsModule,
@@ -33,6 +33,7 @@ import { MediaModel } from '../../../../../../shared/chatMessageModel';
 import { ChatService } from '../services/chat.service';
 import { MediaStorageService } from '../services/mediaStorage.service';
 import { OrderDialog } from './order-dialog/order-dialog.component';
+import { getOrder } from '../services/agents/orderingAgent/orderTools';
 
 @Component({
   selector: 'app-chatbot',
@@ -53,7 +54,7 @@ export class ChatbotComponent {
   chatService: ChatService = inject(ChatService)
   mediaStorageService: MediaStorageService = inject(MediaStorageService);
   dialog = inject(MatDialog)
-  currentOrder = "";
+  currentOrder: WritableSignal<string> = signal("No items in your order yet.");
 
   input = signal<string | undefined>(undefined);
   chatFormControl = new FormControl(
@@ -83,6 +84,24 @@ export class ChatbotComponent {
         this.disableChat()
       } else {
         this.enableChat()
+      }
+    });
+    effect(() => {
+      const orderItems: BeverageModel[] = this.chatService.order();
+      if (orderItems && orderItems.length > 0) {
+        this.currentOrder.set(
+          orderItems
+            .map(item => {
+              let display = item.name;
+              if (item.modifiers && item.modifiers.length > 0) {
+                display += ` (${item.modifiers.join(', ')})`;
+              }
+              return display;
+            })
+            .join(`, \n`)
+        );
+      } else {
+        this.currentOrder.set("No items in your order yet.");
       }
     });
   }
