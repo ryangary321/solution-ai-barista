@@ -26,7 +26,7 @@ export const environment = {
         messagingSenderId: "",
         appId: ""
     },
-    recaptchaEnterpriseKey: "",
+    // recaptchaEnterpriseKey: "",
 };
 
 export const geminiModel = "gemini-2.0-flash";

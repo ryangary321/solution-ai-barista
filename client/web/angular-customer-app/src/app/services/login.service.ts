@@ -33,7 +33,7 @@ export class LoginService {
   // private appCheck = inject(AppCheck);
   
   idToken = signal<string>('');
-  appCheckToken = signal<string>('');
+  // appCheckToken = signal<string>('');
   uid = signal<string>('');
   isLoggedIn = computed(() => this.idToken() != '') 
   
@@ -76,7 +76,7 @@ export class LoginService {
     return { 
       headers: new HttpHeaders({
         'Authorization': `Bearer ${this.idToken()}`,
-        'X-Firebase-AppCheck': this.appCheckToken(),
+        // 'X-Firebase-AppCheck': this.appCheckToken(),
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         Allow: '*'
