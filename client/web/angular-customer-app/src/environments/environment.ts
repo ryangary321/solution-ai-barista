@@ -35,9 +35,9 @@ export declare interface BootstrapData {
 
 const bootstrapData = window['APP_TEMPLATE_BOOTSTRAP'] as BootstrapData;
 
-// if (!bootstrapData) {
-//   window.location.href = '/config.html';
-// }
+if (!bootstrapData) {
+  window.location.href = '/config.html';
+}
 
 export const environment = {
   firebase: {
