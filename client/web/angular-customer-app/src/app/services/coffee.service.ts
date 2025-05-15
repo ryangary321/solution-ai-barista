@@ -99,10 +99,13 @@ export class CoffeeService {
 
       for (const call of functionCalls) {
         const result = handleOrderingFunctionCall(call.name, call.args);
-        functionResults.push({
-          functionResponse: { name: call.name, response: result },
-        });
-        if (call.name !== 'suggest_responses' && call.name !== 'feature_item') {
+        if(call.name == "submit_order") {
+         break; 
+        }
+        if(call.name !== "suggest_responses") {
+          functionResults.push({functionResponse: {name: call.name, response: result}});
+        }
+        if (call.name !== 'feature_item') {
           hasNonStateUpdatingCall = true;
         }
       }
@@ -247,7 +250,8 @@ export class CoffeeService {
           order: getAgentState().inProgressOrder || [],
           featuredItemImage: undefined
         };
-        clearOrder();
+        const result = clearOrder();
+        console.log(result);
         return x;
       })
     );

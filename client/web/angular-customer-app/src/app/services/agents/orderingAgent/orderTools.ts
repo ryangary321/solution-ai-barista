@@ -115,7 +115,7 @@ export const submitOrder = (readyForSubmission: boolean) => {
     //   console.info('[submitOrder] User has not approved the order.');
     //   return { status: 'MAKE_CHANGES' };
     // }
-    return getAgentState();
+    return {state:getAgentState(), message: 'MarkedAsReady'};
 }
 
 export const suggestResponses = (responses: string[]) => {
