@@ -18,19 +18,24 @@
     <div class="order-bar">
       <mat-expansion-panel
         class="order-expansion-panel"
-        [expanded]="chatService.order().length > 0" >
+        [expanded]="chatService.order().length > 0"
+      >
         <mat-expansion-panel-header class="order-panel-header">
           <mat-panel-title class="order-title-in-header">
-            Your order 
-            @if (chatService.order().length > 0) {
-              <span>({{ chatService.order().length }} item{{ chatService.order().length === 1 ? '' : 's' }})</span>
+            Your order @if (chatService.order().length > 0) {
+            <span
+              >({{ chatService.order().length }} item{{
+                chatService.order().length === 1 ? "" : "s"
+              }})</span
+            >
             }
           </mat-panel-title>
         </mat-expansion-panel-header>
-    
+
         <div class="order-details-content">
           <div class="order-text-actual">
-            {{ currentOrder() }} </div>
+            {{ currentOrder() }}
+          </div>
         </div>
       </mat-expansion-panel>
     </div>
@@ -69,25 +74,23 @@
         </div>
         } }
       </div>
-
-      <div class="suggestions-container">
-        <div class="quick-replies">
-          @for (response of chatService.suggestedResponses(); track response;
-          let index = $index) {
-          <button
-            mat-stroked-button
-            class="quick-reply-chip"
-            (click)="ask(response)"
-          >
-            <mat-icon fontSet="material-symbols-outlined"
-              >prompt_suggestion</mat-icon
-            >{{ response }}
-          </button>
-          }
-        </div>
+    </div>
+    <div class="suggestions-container">
+      <div class="quick-replies">
+        @for (response of chatService.suggestedResponses(); track response; let
+        index = $index) {
+        <button
+          mat-stroked-button
+          class="quick-reply-chip"
+          (click)="ask(response)"
+        >
+          <mat-icon fontSet="material-symbols-outlined"
+            >prompt_suggestion</mat-icon
+          >{{ response }}
+        </button>
+        }
       </div>
     </div>
-
     <form class="chat-input-bar" (ngSubmit)="ask()">
       @if (chatService.error()) {
       <pre class="error-message">{{ chatService.error()?.text }}</pre>
