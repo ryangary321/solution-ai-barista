@@ -82,6 +82,9 @@ export class CoffeeService {
       const functionResults: {functionResponse: {name: string, response: any}}[] = [];
       for (const call of functionCalls) {
         const result = handleOrderingFunctionCall(call.name, call.args);
+        if(call.name == "submit_order") {
+         break; 
+        }
         if(call.name !== "suggest_responses") {
           functionResults.push({functionResponse: {name: call.name, response: result}});
         }
@@ -205,7 +208,8 @@ export class CoffeeService {
           orderSubmitted: true,
           order: getAgentState().inProgressOrder || []
         };
-        clearOrder();
+        const result = clearOrder();
+        console.log(result);
         return x;
       })
     );
