@@ -44,7 +44,8 @@ export class ChatService {
     this.addToChatHistory(res);
     this.readyForSubmission.set(res.readyForSubmission);
     this.orderSubmitted.set(res.orderSubmitted);
-    this.order.set(res.order);
+    this.order.set(res.order ? [...res.order] : []);
+
     // Limit to a maximum of 4 suggested responses
     this.suggestedResponses.set(res.suggestedResponses.slice(0, 4)); 
   }
