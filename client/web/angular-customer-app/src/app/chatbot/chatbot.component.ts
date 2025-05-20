@@ -129,6 +129,7 @@ export class ChatbotComponent {
       if (event.ctrlKey || event.shiftKey) {
         this.input.set(this.input() + '\n');
       } else {
+        event.preventDefault();
         if (this.chatFormControl.invalid) return;
         this.ask(this.input());
       }
