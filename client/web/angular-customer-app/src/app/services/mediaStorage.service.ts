@@ -16,37 +16,53 @@
 
 import { Injectable, inject, signal } from '@angular/core';
 
-import { Storage, getDownloadURL, ref, uploadBytes } from '@angular/fire/storage';
+import {
+  Storage,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from '@angular/fire/storage';
 import { MediaModel } from '../../../../../../shared/chatMessageModel';
 import { LoginService } from './login.service';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class MediaStorageService {
-    private loginService: LoginService = inject(LoginService);
-    private storage = inject(Storage);
-    media = signal<MediaModel | null>(null);
+  private loginService: LoginService = inject(LoginService);
+  private storage = inject(Storage);
+  media = signal<MediaModel | null>(null);
 
-    // Upload the file to Cloud Storage for Firebase and return the its storage URL.
-    uploadMedia(mediaFile: File): Promise<MediaModel> {
-        // Get the user's uid and construct a storage reference.
-        const uid = this.loginService.uid();
-        const storageRef = ref(this.storage, `/users/${uid}/media/${mediaFile.name}`);
-        //TODO: Consider switching to uploadBytesResumable and adding user feedback.
-        return uploadBytes(storageRef, mediaFile).then((snapshot) => {
-            console.log('Uploaded image', storageRef.fullPath);
-            return getDownloadURL(storageRef).then((url) => {
-                let media = {
-                    storageUrl: snapshot.ref.toString(),
-                    contentType: mediaFile.type,
-                    downloadUrl: url
-                }
-                this.media.set(media)
-                return media
-            });
-            
-        })
+  async processMedia(file: File): Promise<void> {
+    try {
+      const base64EncodedData = await this.fileToBase64(file);
+      this.media.set({
+        base64Data: base64EncodedData,
+        mimeType: file.type,
+      });
+    } catch (error) {
+      console.error('Error processing file to base64:', error);
+      this.media.set(null);
+      throw error;
     }
+  }
 
+  private fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          resolve((reader.result as string).split(',')[1]);
+        } else {
+          reject(new Error('FileReader result is null'));
+        }
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  clearMedia(): void {
+    this.media.set(null);
+  }
 }

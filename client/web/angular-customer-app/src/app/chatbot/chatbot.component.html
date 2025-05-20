@@ -58,8 +58,8 @@
         <div class="message user">
           <div class="message-text-container">
             {{ entry.text }}
-            @if (entry.media && entry.media.downloadUrl) {
-            <img [src]="entry.media.downloadUrl" alt="User media" />
+            @if (entry.media && entry.media.base64Data) {
+            <img [src]="entry.media.base64Data" alt="User media" />
             }
           </div>
         </div>
@@ -105,7 +105,7 @@
         />
         @if (mediaStorageService.media()) {
         <img
-          [src]="mediaStorageService.media()?.downloadUrl"
+          [src]="mediaStorageService.media()?.base64Data"
           class="media-preview-small"
           alt="Media preview"
         />

@@ -39,15 +39,11 @@ export interface ChatMessageModel {
  */
 export interface MediaModel {
   /**
-   * URL to the media. May be a gs:// or https:// URL.
+   * Uploaded image as base64 data
    */
-  storageUrl: string,
+  base64Data: string;
   /**
-   * Type of media
+   * Mime type of the image
    */
-  contentType: string,
-  /**
-   * Download URL which is an https:// URL.
-   */
-  downloadUrl: string,
+  mimeType: string;
 }
