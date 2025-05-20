@@ -88,7 +88,7 @@ export class CoffeeService {
       tools: [orderingTool],
       history: this.chatMessages.getMessages(),
     });
-
+console.log(parts,"parts");
     let generationResponse = await chatSession.sendMessage(parts);
     const functionCalls = generationResponse.response.functionCalls();
     if (functionCalls !== undefined && functionCalls.length > 0) {
@@ -118,16 +118,17 @@ export class CoffeeService {
 
   sendMessage(request: ChatMessageModel): Observable<ChatResponseModel> {
     const parts: Array<Part> = new Array();
-    parts.push({ text: request.text });
-    if (request.media && request.media.downloadUrl) {
-      const base64Parts = request.media.downloadUrl.split(',');
-      if (base64Parts.length === 2) {
-        parts.push({ inlineData: { data: base64Parts[1], mimeType: request.media.contentType } });
-      } else {
-        console.warn("Media downloadUrl doesn't seem to be a valid data URL:", request.media.downloadUrl);
-      }
+    parts.push({text: request.text});
+    if (request.media && request.media.base64Data && request.media.mimeType) {
+      parts.push({
+        inlineData: {
+          data: request.media.base64Data.split(',')[1],
+          mimeType: request.media.mimeType,
+        },
+      });
+      console.log(parts);
+      console.log('Image part prepared for ai');
     }
-    updateState({ ...getAgentState(), featuredItemName: null });
 
     this.generativeModel.generationConfig = {
       ...this.generativeModel.generationConfig,

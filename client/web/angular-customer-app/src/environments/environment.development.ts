@@ -37,12 +37,17 @@ const bootstrapData = window['APP_TEMPLATE_BOOTSTRAP'] as BootstrapData;
 
 console.log(bootstrapData);
 
-if (!bootstrapData) {
-  window.location.href = '/config.html';
-}
+// if (!bootstrapData) {
+//   window.location.href = '/config.html';
+// }
 
 export const environment = {
-    ...bootstrapData?.firebase,
+  apiKey: "AIzaSyA9y0d8QrxsYZ6AWNK8v-enyTq8QSrYD8w",
+  authDomain: "cynthia-solution-ai-barista.firebaseapp.com",
+  projectId: "cynthia-solution-ai-barista",
+  storageBucket: "cynthia-solution-ai-barista.firebasestorage.app",
+  messagingSenderId: "810009004277",
+  appId: "1:810009004277:web:b5af7ea8c9b03fca199dbc",
   geminiApiKey: bootstrapData?.geminiApiKey || '',
   viewCodeLink: bootstrapData?.viewCodeLink || '',
   viewCodeMessage: bootstrapData?.viewCodeMessage || '',

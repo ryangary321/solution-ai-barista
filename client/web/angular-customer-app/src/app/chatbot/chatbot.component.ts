@@ -120,6 +120,8 @@ export class ChatbotComponent {
     const photo = media ?? this.mediaStorageService.media() ?? undefined;
     // if (!text) return;
     this.chatService.sendChat(text, photo);
+    this.chatFormControl.setValue('');
+    this.mediaStorageService.clearMedia();
   }
 
   keyPress(event: KeyboardEvent) {
@@ -138,28 +140,25 @@ export class ChatbotComponent {
       event.target as HTMLInputElement | null;
 
     if (eventTarget?.files?.[0]) {
-      const file: File = eventTarget.files[0];
-      const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        this.uploadPhoto(reader.result as string);
-      });
-      reader.readAsDataURL(file);
+      if (eventTarget?.files?.[0]) {
+        const file: File = eventTarget.files[0];
+        this.mediaStorageService
+          .processMedia(file)
+          .then(() => {
+            console.log(
+              'File processed and will be sent with the next message.'
+            );
+          })
+          .catch((error) => {
+            console.error('Error processing file for chat:', error);
+          });
+        if (eventTarget) {
+          eventTarget.value = '';
+        }
+      }
     }
   }
-
-  uploadPhoto(file: string) {
-    fetch(file)
-      .then((response) => response.blob())
-      .then((blob) => {
-        // Ensure the filename is unique, otherwise existing files will be overwritten.
-        const fileName = `${Date.now()}.jpg`;
-        const loadedFile = new File([blob], fileName, { type: 'image/jpeg' });
-
-        this.mediaStorageService.uploadMedia(loadedFile).catch((error) => {
-          console.error('Error uploading image', error);
-        });
-      });
-  }
+  
   blobToBase64(blob: Blob) {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -170,6 +169,7 @@ export class ChatbotComponent {
     });
   }
 
+
   openImageCropModal(): void {
     const dialogRef = this.dialog.open(CoffeeSelectComponent, {
       data: { image: menuItemImages.get('Feature') },
@@ -177,10 +177,10 @@ export class ChatbotComponent {
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
         const base64 = (await this.blobToBase64(result)) as string;
+        console.log(base64, "base64");
         const media: MediaModel = {
-          storageUrl: '',
-          downloadUrl: base64,
-          contentType: 'image/jpeg',
+          base64Data: base64,
+          mimeType: 'image/png',
         };
         this.ask('What do you recommend based on this image?', media);
       }
@@ -219,7 +219,7 @@ export class ChatbotComponent {
   private disableChat() {
     this.chatFormControl.setValue('');
     this.chatFormControl.disable();
-    this.mediaStorageService.media.set(null);
+    this.mediaStorageService.clearMedia();
   }
 
   private enableChat() {

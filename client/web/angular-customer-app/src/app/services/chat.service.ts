@@ -94,7 +94,7 @@ export class ChatService {
     let chat: ChatMessageModel = {
       role: 'user',
       text: message,
-      media: media
+      media: media ?? undefined,
     }
 
     this.addToChatHistory(chat);

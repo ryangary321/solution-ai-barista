@@ -46,7 +46,7 @@
           <div class="message-icon-container">
             <mat-icon class="barista-icon">coffee</mat-icon>
           </div>
-          <div class="message-text-container image-only-container">
+          <!-- <div class="message-text-container image-only-container">
             <div class="featured-item-image-container">
               <img
                 src="https://storage.googleapis.com/vertex-ai-generative-ai-devrel-storage/coffee-shop-app/coffee-beans.jpg"
@@ -55,7 +55,7 @@
                 (click)="openImageCropModal()"
               />
             </div>
-          </div>
+          </div> -->
         </div>
         @if (chatService.loading()) {
         <div class="message barista">
@@ -73,8 +73,8 @@
         <div class="message user">
           <div class="message-text-container">
             {{ entry.text }}
-            @if (entry.media && entry.media.downloadUrl) {
-            <img [src]="entry.media.downloadUrl" alt="User media" />
+            @if (entry.media && entry.media.base64Data) {
+            <img [src]="entry.media.base64Data" alt="User media" />
             }
           </div>
         </div>
@@ -137,7 +137,7 @@
         />
         @if (mediaStorageService.media()) {
         <img
-          [src]="mediaStorageService.media()?.downloadUrl"
+          [src]="mediaStorageService.media()?.base64Data"
           class="media-preview-small"
           alt="Media preview"
         />
@@ -148,18 +148,11 @@
         mat-icon-button
         class="action-button add-btn"
         type="button"
-        (click)="file_input.click()"
+        (click)="openImageCropModal()"
         [disabled]="chatService.loading()"
         matTooltip="Add attachment"
       >
         <mat-icon>add</mat-icon>
-        <input
-          #file_input
-          type="file"
-          accept="image/*"
-          style="display: none"
-          (change)="setFileData($event)"
-        />
       </button>
 
       <button

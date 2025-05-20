@@ -98,6 +98,7 @@ export class AgentSessionManager {
         // Set up the chat with the ordering agent and send the message.
         let response;
         const chat = this.session.chat(OrderingAgent, chatOptions);
+        console.log(chat, message);
         try {
             response = await chat.send(message);
         } catch (error) {
