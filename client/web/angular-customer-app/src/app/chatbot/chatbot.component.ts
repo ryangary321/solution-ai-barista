@@ -76,6 +76,7 @@ export class ChatbotComponent {
     effect(() => {
       if (this.chatService.history().length === 0) {
         this.chatFormControl.setValue("What is the recommended coffee of the day?")
+        this.ask(this.input());
       }
     });
 
