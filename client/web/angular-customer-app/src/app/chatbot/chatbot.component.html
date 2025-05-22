@@ -58,8 +58,8 @@
         <div class="message user">
           <div class="message-text-container">
             {{ entry.text }}
-            @if (entry.media && entry.media.downloadUrl) {
-            <img [src]="entry.media.downloadUrl" alt="User media" />
+            @if (entry.media && entry.media.base64Data) {
+            <img [src]="'data:image/png;base64, ' + entry.media.base64Data" alt="User media" />
             }
           </div>
         </div>
@@ -104,12 +104,22 @@
           placeholder="Anything else?"
         />
         @if (mediaStorageService.media()) {
-        <img
-          [src]="mediaStorageService.media()?.downloadUrl"
-          class="media-preview-small"
-          alt="Media preview"
-        />
-        }
+          <div class="image-preview-container">
+            <img
+              [src]="'data:image/png;base64, ' + mediaStorageService.media()?.base64Data"
+              class="media-preview-in-bar"
+              alt="Preview"
+            />
+            <button
+              mat-icon-button
+              class="remove-preview-button"
+              type="button"
+              (click)="this.mediaStorageService.clearMedia()" 
+              matTooltip="Remove image">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          }
       </mat-form-field>
 
       <button

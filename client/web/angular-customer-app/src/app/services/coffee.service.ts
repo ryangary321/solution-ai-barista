@@ -99,8 +99,14 @@ export class CoffeeService {
   sendMessage(request: ChatMessageModel): Observable<ChatResponseModel> {
     const parts: Array<Part> = new Array();
     parts.push({text: request.text});
-    if(request.media) {
-      parts.push({inlineData: {data: request.media.downloadUrl, mimeType: request.media.contentType}});
+    if (request.media && request.media.base64Data && request.media.mimeType) {
+      parts.push({
+        inlineData: {
+          data: request.media.base64Data,
+          mimeType: request.media.mimeType,
+        },
+      });
+      console.log('Image part prepared for ai');
     }
 
     this.generativeModel.generationConfig = {...this.generativeModel.generationConfig, temperature: orderingAgentInfo.config.temperature};
