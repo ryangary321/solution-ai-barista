@@ -171,7 +171,7 @@ const submitOrder = ai.defineTool({
       orderSubmitted: true
     });
 
-    return { status: 'ORDER_SUBMITTED', name: orderName };
+    return { status: 'ORDER_SUBMITTED', collectionName: orderName };
   
   } else {
     // User has not approved the order.
