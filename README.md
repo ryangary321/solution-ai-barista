@@ -13,7 +13,7 @@ intended for use in a production environment.*
 
 We recommend trying out this project in Firebase Studio. Click this button to launch the project in Firebase Studio and follow the steps below to get started.
 
-<a href="https://studio.firebase.google.com/import?url=https://github.com/FirebaseExtended/solution-ai-barista/tree/decafe">
+<a href="https://studio.firebase.google.com/new?template=https://github.com/FirebaseExtended/solution-ai-barista/tree/decafe">
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
