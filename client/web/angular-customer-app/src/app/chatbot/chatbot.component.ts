@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-
-import { Component, effect, inject, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import {
   FormControl,
   FormsModule,
@@ -34,6 +39,8 @@ import { ChatService } from '../services/chat.service';
 import { MediaStorageService } from '../services/mediaStorage.service';
 import { OrderDialog } from './order-dialog/order-dialog.component';
 import { getOrder } from '../services/agents/orderingAgent/orderTools';
+import { CoffeeSelectComponent } from './coffee-select/coffee-select.component';
+import { menuItemImages } from '../services/utils/menuUtils';
 
 @Component({
   selector: 'app-chatbot',
@@ -45,16 +52,16 @@ import { getOrder } from '../services/agents/orderingAgent/orderTools';
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './chatbot.component.html',
   styleUrl: './chatbot.component.scss',
 })
 export class ChatbotComponent {
-  chatService: ChatService = inject(ChatService)
+  chatService: ChatService = inject(ChatService);
   mediaStorageService: MediaStorageService = inject(MediaStorageService);
-  dialog = inject(MatDialog)
-  currentOrder: WritableSignal<string> = signal("No items in your order yet.");
+  dialog = inject(MatDialog);
+  currentOrder: WritableSignal<string> = signal('No items in your order yet.');
 
   input = signal<string | undefined>(undefined);
   chatFormControl = new FormControl(
@@ -66,24 +73,26 @@ export class ChatbotComponent {
     effect(() => {
       if (this.chatService.readyForSubmission()) {
         // Display the order confirmation dialog if the order is ready for submission
-        this.openOrderSubmissionDialog(this.chatService.order())
-      } else if(this.chatService.orderSubmitted()){
+        this.openOrderSubmissionDialog(this.chatService.order());
+      } else if (this.chatService.orderSubmitted()) {
         // Display a dialog with the final message from the agent if the order has been submitted.
-        this.openFinalConfirmationDialog(this.chatService.history()[0].text)
+        this.openFinalConfirmationDialog(this.chatService.history()[0].text);
       }
     });
 
     effect(() => {
       if (this.chatService.history().length === 0) {
-        this.chatFormControl.setValue("What is the recommended coffee of the day?")
+        this.chatFormControl.setValue(
+          'What is the recommended coffee of the day?'
+        );
       }
     });
 
     effect(() => {
       if (this.chatService.loading()) {
-        this.disableChat()
+        this.disableChat();
       } else {
-        this.enableChat()
+        this.enableChat();
       }
     });
     effect(() => {
@@ -91,7 +100,7 @@ export class ChatbotComponent {
       if (orderItems && orderItems.length > 0) {
         this.currentOrder.set(
           orderItems
-            .map(item => {
+            .map((item) => {
               let display = item.name;
               if (item.modifiers && item.modifiers.length > 0) {
                 display += ` (${item.modifiers.join(', ')})`;
@@ -101,22 +110,22 @@ export class ChatbotComponent {
             .join(`, \n`)
         );
       } else {
-        this.currentOrder.set("No items in your order yet.");
+        this.currentOrder.set('No items in your order yet.');
       }
     });
   }
 
   ask(message?: string, media?: MediaModel) {
-    const text = message ?? this.chatFormControl.value!.trim()
-    const photo = media ?? this.mediaStorageService.media() ?? undefined
+    const text = message ?? this.chatFormControl.value!.trim();
+    const photo = media ?? this.mediaStorageService.media() ?? undefined;
     // if (!text) return;
-    this.chatService.sendChat(text, photo)
+    this.chatService.sendChat(text, photo);
   }
 
   keyPress(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       if (event.ctrlKey || event.shiftKey) {
-        this.input.set(this.input() + '\n')
+        this.input.set(this.input() + '\n');
       } else {
         if (this.chatFormControl.invalid) return;
         this.ask(this.input());
@@ -127,12 +136,12 @@ export class ChatbotComponent {
   setFileData(event: Event): void {
     const eventTarget: HTMLInputElement | null =
       event.target as HTMLInputElement | null;
-      
-    if (eventTarget?.files?.[0]) {      
+
+    if (eventTarget?.files?.[0]) {
       const file: File = eventTarget.files[0];
       const reader = new FileReader();
-      reader.addEventListener('load', () => {        
-        this.uploadPhoto(reader.result as string)
+      reader.addEventListener('load', () => {
+        this.uploadPhoto(reader.result as string);
       });
       reader.readAsDataURL(file);
     }
@@ -140,17 +149,42 @@ export class ChatbotComponent {
 
   uploadPhoto(file: string) {
     fetch(file)
-      .then((response => response.blob()))
-      .then((blob => {
+      .then((response) => response.blob())
+      .then((blob) => {
         // Ensure the filename is unique, otherwise existing files will be overwritten.
         const fileName = `${Date.now()}.jpg`;
-        const loadedFile = new File([blob], fileName, { type: "image/jpeg" });
+        const loadedFile = new File([blob], fileName, { type: 'image/jpeg' });
 
-        this.mediaStorageService.uploadMedia(loadedFile)
-          .catch((error) => {
-            console.error('Error uploading image', error);
-          });
-      }));
+        this.mediaStorageService.uploadMedia(loadedFile).catch((error) => {
+          console.error('Error uploading image', error);
+        });
+      });
+  }
+  blobToBase64(blob: Blob) {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+    });
+  }
+
+  openImageCropModal(): void {
+    const dialogRef = this.dialog.open(CoffeeSelectComponent, {
+      data: { image: menuItemImages.get('Feature') },
+    });
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result) {
+        const base64 = (await this.blobToBase64(result)) as string;
+        const media: MediaModel = {
+          storageUrl: '',
+          downloadUrl: base64,
+          contentType: 'image/jpeg',
+        };
+        this.ask('What do you recommend based on this image?', media);
+      }
+    });
   }
 
   confirmOrder() {
@@ -161,36 +195,36 @@ export class ChatbotComponent {
     let dialogRef = this.dialog.open(OrderDialog, {
       data: {
         message: message,
-        isConfirmation: true
+        isConfirmation: true,
       },
-      disableClose: true
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.chatService.clearSession();
-    })
+    });
   }
 
   private openOrderSubmissionDialog(order: BeverageModel[]) {
-    console.log("SUBMITTING READY!!!");
+    console.log('SUBMITTING READY!!!');
     let dialogRef = this.dialog.open(OrderDialog, {
       data: { order: order },
-      disableClose: true
+      disableClose: true,
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.chatService.sendOrderConfirmation(result.submitOrder);
     });
   }
 
   private disableChat() {
-    this.chatFormControl.setValue('')
-    this.chatFormControl.disable()
-    this.mediaStorageService.media.set(null)
+    this.chatFormControl.setValue('');
+    this.chatFormControl.disable();
+    this.mediaStorageService.media.set(null);
   }
 
   private enableChat() {
-    this.chatFormControl.enable()
-    this.chatFormControl.markAsUntouched()
-    this.chatFormControl.markAsPristine()
+    this.chatFormControl.enable();
+    this.chatFormControl.markAsUntouched();
+    this.chatFormControl.markAsPristine();
   }
 }

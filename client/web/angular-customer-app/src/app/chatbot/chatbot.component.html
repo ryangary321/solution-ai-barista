@@ -42,6 +42,21 @@
 
     <div class="chat-content-area">
       <div id="chat" class="messages">
+        <div class="message barista image-bubble">
+          <div class="message-icon-container">
+            <mat-icon class="barista-icon">coffee</mat-icon>
+          </div>
+          <div class="message-text-container image-only-container">
+            <div class="featured-item-image-container">
+              <img
+                src="https://storage.googleapis.com/vertex-ai-generative-ai-devrel-storage/coffee-shop-app/coffee-beans.jpg"
+                alt="Featured item"
+                class="featured-item-image"
+                (click)="openImageCropModal()"
+              />
+            </div>
+          </div>
+        </div>
         @if (chatService.loading()) {
         <div class="message barista">
           <div class="message-icon-container">
