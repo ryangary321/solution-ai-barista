@@ -88,9 +88,9 @@ export class CoffeeService {
         if(call.name == "submit_order") {
           stopProcessing = true;
         }
-        // if(call.name !== "suggest_responses") {
+        if(call.name !== "suggest_responses") {
           functionResults.push({functionResponse: {name: call.name, response: result}});
-        // }
+        }
       }
       if(!stopProcessing && currentStep<=maxGenSteps && functionResults.length > 0) {
         generationResponse = await this.generateResponse(functionResults, currentStep + 1, maxGenSteps);
