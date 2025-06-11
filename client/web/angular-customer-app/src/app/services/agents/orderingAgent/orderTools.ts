@@ -260,10 +260,24 @@ export const orderingTool: FunctionDeclarationsTool = {
       },
     },
     {
-      name: 'recommendation_agent',
-      description:
-        'A way for the barista agent to recommend drinks to the user.',
-    },
+        name: 'recommendation_agent',
+        description:
+          'Use this tool to provide a single drink recommendation to the user based on context like an image. You must decide on a drink from the menu and its modifiers, then call this tool.',
+        parameters: {
+          type: SchemaType.OBJECT,
+          properties: {
+            drink: Schema.enumString({
+              enum: menuAllBeverages,
+              description: 'The name of the recommended drink.',
+            }),
+            modifiers: Schema.array({
+              items: Schema.string({ nullable: true }),
+              description:
+                'An array of suggested modifiers for the recommended drink (optional).',
+            }),
+          },
+        },
+      },
     {
       name: 'feature_item',
       description:
@@ -283,6 +297,7 @@ export const orderingTool: FunctionDeclarationsTool = {
 };
 
 export function handleOrderingFunctionCall(callName: string, callArgs: any) {
+    console.log(callArgs,"callArgs");
   switch (callName) {
     case 'add_to_order':
       return addToOrder(callArgs.drink, callArgs.modifiers);
@@ -301,7 +316,7 @@ export function handleOrderingFunctionCall(callName: string, callArgs: any) {
     case 'suggest_responses':
       return suggestResponses(callArgs.responses);
     case 'recommendation_agent':
-      return getBaristaRecommendation();
+        return getBaristaRecommendation(callArgs.itemName, callArgs.modifiers);
     case 'feature_item':
     return featureItem(callArgs.itemName);
     default:
