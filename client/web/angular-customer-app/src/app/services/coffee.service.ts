@@ -32,6 +32,7 @@ import { ChatHistory } from './state/chatHistory';
 import { SubmittedOrderStore } from './stores/submittedOrderStore';
 import { generateName } from './utils/submissionUtils';
 import { Firestore, getFirestore } from '@angular/fire/firestore';
+import { getMenuItemImage } from './utils/menuUtils';
 
 // const chatUrl = `${environment.backendUrl}/chat`;
 // const approveUrl = `${environment.backendUrl}/approveOrder`;
@@ -78,18 +79,20 @@ export class CoffeeService {
 
     let generationResponse = await chatSession.sendMessage(parts);
     const functionCalls = generationResponse.response.functionCalls()
-    if(functionCalls !== undefined) {
+    if(functionCalls && functionCalls.length > 0) {
       const functionResults: {functionResponse: {name: string, response: any}}[] = [];
+      let stopProcessing = false;
       for (const call of functionCalls) {
         const result = handleOrderingFunctionCall(call.name, call.args);
+        console.log("call", call);
         if(call.name == "submit_order") {
-         break; 
+          stopProcessing = true;
         }
-        if(call.name !== "suggest_responses") {
+        // if(call.name !== "suggest_responses") {
           functionResults.push({functionResponse: {name: call.name, response: result}});
-        }
+        // }
       }
-      if(currentStep<=maxGenSteps && functionResults.length > 0) {
+      if(!stopProcessing && currentStep<=maxGenSteps && functionResults.length > 0) {
         generationResponse = await this.generateResponse(functionResults, currentStep + 1, maxGenSteps);
       }
     }
@@ -117,14 +120,24 @@ export class CoffeeService {
         throw err.error;
       }),
       map((data) => {
+        const agentCurrentState = getAgentState();
+        let imageUrl: string | undefined = undefined;
+        if (agentCurrentState.featuredItemName && getMenuItemImage(agentCurrentState.featuredItemName)) {
+          imageUrl = getMenuItemImage(agentCurrentState.featuredItemName);
+        }
         const chatResponse: ChatResponseModel = {
           role: 'agent',
           text: data.response.text(),
           suggestedResponses: getAgentState().suggestedResponses || [],
           readyForSubmission: getAgentState().readyForSubmission || false,
           orderSubmitted: getAgentState().orderSubmitted || false,
-          order: getAgentState().inProgressOrder || []
+          order: getAgentState().inProgressOrder || [],
+          featuredItemImage: imageUrl,
         };
+        this.chatMessages.addMessage([{ role: 'user', parts: parts }]);
+        if (data.response.candidates) {
+            this.chatMessages.addMessage([data.response.candidates[0].content]); // Add model's response to history
+        }
         return chatResponse;
       })
     );
@@ -212,7 +225,8 @@ export class CoffeeService {
           suggestedResponses: [],
           readyForSubmission: true,
           orderSubmitted: true,
-          order: getAgentState().inProgressOrder || []
+          order: getAgentState().inProgressOrder || [],
+          featuredItemImage: undefined
         };
         const result = clearOrder();
         console.log(result);
