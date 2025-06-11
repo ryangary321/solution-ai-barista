@@ -13,4 +13,8 @@ export class ChatHistory {
   getMessages(): Content[] {
     return this.messages;
   }
+
+  setMessages(messages: Content[]): void {
+    this.messages = messages;
+  }
 }
