@@ -37,12 +37,15 @@
     # Workspace lifecycle hooks
     workspace = {
       onCreate = {
+        # Set up the backend API and install dependencies
+        npm-install = ''
+          cd client/web/angular-customer-app
+          npm ci --no-audit --prefer-offline --no-progress --timing || npm i --no-audit --no-progress --timing
+        '';
         default.openFiles = [
           "README.md"
           "client/web/angular-customer-app/src/app/services/chat.service.ts"
-        ]
-        # Set up the backend API and install dependencies
-        npm-install = "cd client/web/angular-customer-app && npm ci --no-audit --prefer-offline --no-progress --timing || npm i --no-audit --no-progress --timing";
+        ];
       };
       # Runs when the workspace is (re)started
       onStart = {
