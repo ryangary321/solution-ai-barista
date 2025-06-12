@@ -18,10 +18,18 @@
    # Follow the configuration steps in the README to set up your project.
    # ENABLE_APPCHECK = "TRUE";
    LOCAL_RECOMMENDATION_SERVICE = "http://127.0.0.1:8084";
+   GOOGLE_PROJECT = "<project-id>";
+   CLOUDSDK_CORE_PROJECT = "<project-id>";
+   TF_VAR_project = "<project-id>";
+   # Flip to true to help improve Angular
+   NG_CLI_ANALYTICS = "false";
+   # Quieter Terraform logs
+   TF_IN_AUTOMATION = "true";
   };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
+     "hashicorp.terraform"
      "ms-vscode.js-debug"
      "angular.ng-template"
     ];
@@ -29,11 +37,12 @@
     # Workspace lifecycle hooks
     workspace = {
       onCreate = {
+        default.openFiles = [
+          "README.md"
+          "client/web/angular-customer-app/src/app/services/chat.service.ts"
+        ]
         # Set up the backend API and install dependencies
-        api-install = "cd services/cloud-run && npm run build:update-libs && npm ci --no-audit --prefer-offline --no-progress --timing";
         npm-install = "cd client/web/angular-customer-app && npm ci --no-audit --prefer-offline --no-progress --timing || npm i --no-audit --no-progress --timing";
-        npm-install-recommendation = "cd services/local-recommendation && npm ci --no-audit --prefer-offline --no-progress --timing";
-        npm-install-functions = "cd services/functions && npm ci --no-audit --prefer-offline --no-progress --timing";
 
          default.openFiles = [
           # Open the entry point for the backend API.
@@ -44,9 +53,6 @@
       };
       # Runs when the workspace is (re)started
       onStart = {
-        # Start the backend API for development.
-        local-recommendation = "cd services/local-recommendation && npm run dev";
-        api-run = "cd services/cloud-run && npm run build:update-libs && npm run genkit:dev";
       };
     };
 
