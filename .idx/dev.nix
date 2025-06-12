@@ -43,13 +43,6 @@
         ]
         # Set up the backend API and install dependencies
         npm-install = "cd client/web/angular-customer-app && npm ci --no-audit --prefer-offline --no-progress --timing || npm i --no-audit --no-progress --timing";
-
-         default.openFiles = [
-          # Open the entry point for the backend API.
-          "services/cloud-run/src/index.ts"
-          # Open the entry point for the Angular Client app.
-          "src/app/app.component.ts"
-         ];
       };
       # Runs when the workspace is (re)started
       onStart = {
