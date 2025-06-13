@@ -29,7 +29,7 @@ export class PhotoSelectDialogComponent {
     this.dialogRef.close();
   }
 
-  selectPhoto(photoUrl: string): void {
-    this.dialogRef.close(photoUrl);
+  selectPhoto(photo: { url: string; alt: string }): void {
+    this.dialogRef.close(photo);
   }
 }

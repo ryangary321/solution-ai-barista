@@ -77,8 +77,9 @@ export class ChatbotComponent {
 
     effect(() => {
       if (this.chatService.history().length === 0) {
-        this.chatFormControl.setValue("What is the recommended coffee of the day?")
-        this.ask(this.input());
+        // this.chatFormControl.setValue("What is the recommended coffee of the day?")
+        // this.ask(this.input());
+        this.openPhotoSelectionDialog()
       }
     });
 
@@ -150,7 +151,7 @@ export class ChatbotComponent {
   // }
 
   openPhotoSelectionDialog(): void {
-
+    const weatherKeys = ['Snowy', 'Rainy'];
     const photosForDialog = [...promptImages].map(([name, dataUri]) => ({
       alt: name, 
       url: dataUri 
@@ -163,9 +164,17 @@ export class ChatbotComponent {
       }
     });
 
-    dialogRef.afterClosed().subscribe(selectedPhotoDataUri => {
-      if (selectedPhotoDataUri) {
-        this.mediaStorageService.processDataUri(selectedPhotoDataUri);
+    dialogRef.afterClosed().subscribe((result: { url: string; alt: string } | undefined) => {
+      if (result && result.url && result.alt) {
+        this.mediaStorageService.processDataUri(result.url);
+        let promptText: string;
+
+        if (weatherKeys.includes(result.alt)) {
+          promptText = 'What would you recommend in this weather?';
+        } else {
+          promptText = 'What do you recommend for this occasion?';
+        }
+        this.chatFormControl.setValue(promptText);
       }
     });
   }
