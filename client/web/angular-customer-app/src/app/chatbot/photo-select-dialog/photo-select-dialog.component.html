@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Describe the weather or mood</h2>
+<mat-dialog-content class="photo-grid">
+  <div class="photo-container" *ngFor="let photo of data.photos">
+    <img
+      [src]="photo.url"
+      [alt]="photo.alt"
+      class="selectable-photo"
+      (click)="selectPhoto(photo.url)"
+    />
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</mat-dialog-actions>
