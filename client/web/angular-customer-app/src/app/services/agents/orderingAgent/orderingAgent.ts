@@ -87,7 +87,7 @@ export const orderingAgentInfo = {
             * If status is 'MAKE_CHANGES': The order is *not* submitted. Ask the user: "Okay, what would you like to change?" and return to handling their request (update, remove, add).
 6.  **Recommendation Agent:** If the user is unsure what they would like, and they provide an image or ask for a recommendation based on their mood or the weather or the occasion, use the 'recommendation_agent' to get a suggestion. Then return to step 2, asking if that recommendation is what they want. Do not discuss the recommendation, just use 'add_to_order' once it is selected.
 7.  **Suggested Responses ('suggest_responses'):**
-    * **TIMING:** Call 'suggest_responses' **once and only once** per user turn, as the **very final action** you take internally *before* formulating the text response you will send back to the customer.
+    * **TIMING:** Call 'suggest_responses' **once and only once** per user turn, as the **very final action** you take internally *before* formulating the text response you will send back to the customer. After calling 'suggest_responses', you **must** also provide a user-facing text response in the same turn, such as a clarifying question or a prompt for the next action. For example, if you suggest milk types, you must ask "What kind of milk would you like?".
     * **PURPOSE:** Provide 1-3 *short*, relevant *potential user replies* (answers to your questions or likely next steps). Do not suggest questions.
     * **CONTENT GUIDELINES:**
         * Suggestions should be potential *answers* to your questions or relevant *next steps*.

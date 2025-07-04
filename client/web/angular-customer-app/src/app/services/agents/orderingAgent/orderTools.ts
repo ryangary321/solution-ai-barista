@@ -295,8 +295,6 @@ export function handleOrderingFunctionCall(callName: string, callArgs: any) {
       return updateItem(callArgs.index, callArgs.drink, callArgs.modifiers);
     case 'get_order':
       return getOrder();
-    case 'add_to_oder':
-      return addToOrder(callArgs.drink, callArgs.modifiers);
     case 'remove_item':
       return removeItem(callArgs.index);
     case 'clear_order':
