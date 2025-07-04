@@ -35,7 +35,6 @@
     }
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close [disabled]="loading()">Make Changes</button>
       <button mat-button (click)="submitOrder()" [disabled]="loading()">Submit Order</button>
   </mat-dialog-actions>
 }
