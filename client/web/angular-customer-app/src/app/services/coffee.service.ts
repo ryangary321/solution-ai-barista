@@ -229,4 +229,10 @@ export class CoffeeService {
     // );
 
   }
+
+  clearChatSession() {
+    this.chatMessages = new ChatHistory();
+    clearOrder();
+  }
+
 }

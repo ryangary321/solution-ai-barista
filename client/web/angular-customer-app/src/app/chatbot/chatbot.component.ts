@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Component, effect, inject, signal, WritableSignal } from '@angular/core';
 import {
   FormControl,
@@ -205,6 +204,7 @@ export class ChatbotComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.chatService.sendOrderConfirmation(result.submitOrder);
+      this.chatService.clearOrderState();
     });
   }
 

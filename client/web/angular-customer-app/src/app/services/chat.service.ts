@@ -17,7 +17,10 @@
 import { Injectable, inject, signal } from '@angular/core';
 
 import { BeverageModel } from '../../../../../../shared/beverageModel';
-import { ChatMessageModel, MediaModel } from '../../../../../../shared/chatMessageModel';
+import {
+  ChatMessageModel,
+  MediaModel,
+} from '../../../../../../shared/chatMessageModel';
 import { ChatResponseModel } from '../../../../../../shared/chatResponseModel';
 import { ErrorResponse } from '../../../../../../shared/errorResponse';
 import { OrderConfirmationMessage } from '../../../../../../shared/orderConfirmationMessage';
@@ -42,18 +45,20 @@ export class ChatService {
   private processChatResponse(res: ChatResponseModel) {
     console.log('processing chat response', res);
     this.addToChatHistory(res);
-    this.readyForSubmission.set(res.readyForSubmission);
+    this.readyForSubmission.set(
+      res.orderSubmitted ? false : res.readyForSubmission
+    );
     this.orderSubmitted.set(res.orderSubmitted);
     this.order.set(res.order ? [...res.order] : []);
 
     // Limit to a maximum of 4 suggested responses
-    this.suggestedResponses.set(res.suggestedResponses.slice(0, 4)); 
+    this.suggestedResponses.set(res.suggestedResponses.slice(0, 4));
   }
 
   private processError(err: ErrorResponse) {
     this.error.set(err);
-    console.error(err)
-    this.loading.set(false)
+    console.error(err);
+    this.loading.set(false);
   }
 
   private processComplete() {
@@ -61,71 +66,82 @@ export class ChatService {
     this.loading.set(false);
   }
 
-  addToChatHistory(chat: ChatMessageModel | ChatResponseModel){    
-    if(chat.text !== "") {
+  addToChatHistory(chat: ChatMessageModel | ChatResponseModel) {
+    if (chat.text !== '') {
       this.history.update((history) => [chat, ...history]);
       return;
     }
-    if(chat.role == "agent") {
+    if (chat.role == 'agent') {
       if (chat.readyForSubmission) {
         return;
       }
     }
-    this.history.update((history) => [{role:'user', text: 'Whoops, try again'}, ...history]);
+    this.history.update((history) => [
+      { role: 'user', text: 'Whoops, try again' },
+      ...history,
+    ]);
   }
 
-  sendOrderConfirmation(approved: boolean){
-    this.loading.set(true)
+  sendOrderConfirmation(approved: boolean) {
+    this.loading.set(true);
 
     let message: OrderConfirmationMessage = {
-      orderApproved: approved
-    }
+      orderApproved: approved,
+    };
 
-    this.coffeeService.sendOrderApproval(message)
-    .subscribe({
+    this.coffeeService.sendOrderApproval(message).subscribe({
       next: (res: ChatResponseModel) => this.processChatResponse(res),
       error: (err: ErrorResponse) => this.processError(err),
-      complete: () => this.processComplete()
+      complete: () => this.processComplete(),
     });
   }
 
   sendChat(message: string, media?: MediaModel) {
-    this.loading.set(true)
+    this.loading.set(true);
 
     let chat: ChatMessageModel = {
       role: 'user',
       text: message,
       media: media ?? undefined,
-    }
+    };
 
     this.addToChatHistory(chat);
-    this.suggestedResponses.set([])
+    this.suggestedResponses.set([]);
 
-    this.coffeeService.sendMessage(chat)
-    .subscribe({
+    this.coffeeService.sendMessage(chat).subscribe({
       next: (res: ChatResponseModel) => this.processChatResponse(res),
       error: (err: ErrorResponse) => this.processError(err),
-      complete: () => this.processComplete()
+      complete: () => this.processComplete(),
     });
   }
 
-  clearChat(){
+  clearOrderState() {
     this.orderSubmitted.set(false);
     this.readyForSubmission.set(false);
-    this.history.set([]);
     this.suggestedResponses.set([]);
     this.error.set(null);
+    this.order.set([]);
+  }
+
+  clearChat() {
+    this.history.set([]);
+    this.suggestedResponses.set([]);
+    this.order.set([]);
+    this.readyForSubmission.set(false);
+    this.orderSubmitted.set(false);
+    this.error.set(null);
+    this.coffeeService.clearChatSession();
   }
 
   clearSession() {
-    this.loading.set(true)
+    this.loading.set(true);
 
     this.loginService.clearSession().subscribe({
-        error: (err: ErrorResponse) => this.processError(err),
-        complete: () => {
-          this.clearChat()
-          this.processComplete()
-        }
-    })
+      error: (err: ErrorResponse) => this.processError(err),
+      complete: () => {
+        this.clearChat();
+        this.processComplete();
+      },
+    });
   }
 }

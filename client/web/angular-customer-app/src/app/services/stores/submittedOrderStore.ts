@@ -81,7 +81,7 @@ export class SubmittedOrderStore {
             expiresAt: expirationTime,
             submittedAt: serverTimestamp()
         });
-    
+
     return `Order ID : ${docRef.id} with name: ${name}`;
   }
 }
