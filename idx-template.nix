@@ -10,7 +10,7 @@
       sed -e 's/<project-id>/${projectId}/' ${.idx/dev.nix} > "$out/.idx/dev.nix"
     else
       sed -e 's/<project-id>/${projectId}/' ${.idx/dev.nix} | sed -e 's/terraform init/# terraform init/' | sed -e 's/terraform apply/# terraform apply/' > "$out/.idx/dev.nix"
-      echo '${bootstrapJs}' > "$out/src/bootstrap.js"
+      echo '${bootstrapJs}' > "$out/client/web/angular-customer-app/src/bootstrap.js"
       echo '{"projects":{"default":"${projectId}"}}' > "$out/.firebaserc"
     fi
     # Remove the template files themselves and any connection to the template's
