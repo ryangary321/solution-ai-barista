@@ -14,6 +14,23 @@
  limitations under the License.
 -->
 <div class="wrapper">
+  <!-- Icon and Title Section -->
+  @if (viewCodeLink) {
+    <div class="view-code-container">
+      <div class="view-code-banner">
+        <img src="assets/link.svg" class="link" />
+        <span>{{ viewCodeMessage }}</span>
+        <a
+          mat-button
+          class="create-workspace-link"
+          [href]="viewCodeLink"
+          target="_blank"
+          rel="noopener"
+          >Create Workspace</a
+        >
+      </div>
+    </div>
+    }
   <mat-toolbar class="custom-toolbar">
     <div class="toolbar-title-container">
       <span class="css-title-icon"></span>

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- .wrapper {
+.wrapper {
   display: grid;
   grid-template:
-    'header' auto
-    'content' 1fr
+    "header" auto
+    "content" 1fr
     / 1fr;
   height: 100vh;
-  background-color: #FCF8F8;
+  background-color: #fcf8f8;
 }
 
 .custom-toolbar {
-  background-color: #FCF8F8 !important;
+  background-color: #fcf8f8 !important;
   color: #333;
   box-shadow: none;
 }
@@ -38,7 +38,7 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-color: #FBBC04;
+  background-color: #fbbc04;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -56,4 +56,31 @@
 
 .custom-toolbar button[mat-icon-button] mat-icon {
   color: #5f6368;
+}
+
+.view-code-container {
+  width: 100%;
+  margin-right: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-code-banner {
+  padding-left: 10%;
+  padding-right: 10%;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .view-code-banner {
+    flex-direction: row;
+  }
+}
+
+.create-workspace-link {
+  margin: 0.25rem;
 }

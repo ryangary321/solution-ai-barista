@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterOutlet } from '@angular/router';
-import { LoginComponent } from "./login/login.component";
+import { LoginComponent } from './login/login.component';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -35,9 +35,12 @@ import { LoginComponent } from "./login/login.component";
     MatButtonModule,
     MatToolbarModule,
     MatTooltipModule,
-    LoginComponent
-],
+    LoginComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  readonly viewCodeLink = environment.viewCodeLink;
+  readonly viewCodeMessage = environment.viewCodeMessage;
+}

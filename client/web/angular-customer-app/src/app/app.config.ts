@@ -37,7 +37,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient( withFetch() ),
     provideMarkdown(),
     provideAnimationsAsync(), 
-    provideFirebaseApp(() => initializeApp(environment)), 
+    provideFirebaseApp(() => initializeApp(environment.firebase)), 
     provideStorage(() => getStorage()),
     provideAuth(() => getAuth()), 
     provideAI(() => getAI(inject(FirebaseApp), {backend: new GoogleAIBackend()})),
