@@ -19,13 +19,13 @@ declare const window: any;
 export declare interface BootstrapData {
   firebase: {
     apiKey?: string;
-    authDomain?: string,
-    databaseURL?: string,
-    projectId?: string,
-    storageBucket?: string,
-    messagingSenderId?: string,
-    measurementId?: string,
-    appId?: string,
+    authDomain?: string;
+    databaseURL?: string;
+    projectId?: string;
+    storageBucket?: string;
+    messagingSenderId?: string;
+    measurementId?: string;
+    appId?: string;
   };
   geminiApiKey?: string;
   debugToken?: string;
@@ -42,12 +42,14 @@ if (!bootstrapData) {
 }
 
 export const environment = {
+  firebase: {
     ...bootstrapData?.firebase,
+  },
   geminiApiKey: bootstrapData?.geminiApiKey || '',
   viewCodeLink: bootstrapData?.viewCodeLink || '',
   viewCodeMessage: bootstrapData?.viewCodeMessage || '',
 };
 
-console.log('env',environment)
+console.log('env', environment);
 
-export const geminiModel = "gemini-2.0-flash";
+export const geminiModel = 'gemini-2.0-flash';
