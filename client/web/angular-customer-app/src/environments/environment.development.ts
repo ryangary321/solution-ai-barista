@@ -27,8 +27,6 @@ export declare interface BootstrapData {
     measurementId?: string;
     appId?: string;
   };
-  geminiApiKey?: string;
-  debugToken?: string;
   viewCodeLink?: string;
   viewCodeMessage?: string;
 }
@@ -45,11 +43,10 @@ export const environment = {
   firebase: {
     ...bootstrapData?.firebase,
   },
-  geminiApiKey: bootstrapData?.geminiApiKey || '',
   viewCodeLink: bootstrapData?.viewCodeLink || '',
   viewCodeMessage: bootstrapData?.viewCodeMessage || '',
 };
 
 console.log('env', environment);
 
-export const geminiModel = 'gemini-2.0-flash';
+export const geminiModel = 'gemini-2.5-flash';
