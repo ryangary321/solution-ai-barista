@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,7 @@
   display: grid;
   grid-template:
     "header" auto
-    "content" 1fr
-    / 1fr;
+    "content" 1fr / 1fr;
   height: 100vh;
   background-color: #fcf8f8;
 }
@@ -27,6 +26,9 @@
   background-color: #fcf8f8 !important;
   color: #333;
   box-shadow: none;
+  height: auto;
+  min-height: 64px;
+  padding: 8px 12px;
 }
 
 .toolbar-title-container {
@@ -67,17 +69,34 @@
 }
 
 .view-code-banner {
-  padding-left: 10%;
-  padding-right: 10%;
+  border: 1px solid #ffc400;
+  border-radius: 24px;
+  font-family: "Google Sans Text", sans-serif;
+  font-size: 14px;
   font-weight: 300;
   display: flex;
   align-items: center;
+  padding: 8px 12px;
+  margin: 0 4px;
   flex-direction: column;
+}
+
+.view-code-banner .link {
+  margin-bottom: 8px;
 }
 
 @media (min-width: 640px) {
   .view-code-banner {
     flex-direction: row;
+  }
+
+  .view-code-banner .link {
+    margin-bottom: 0;
+    margin-right: 12px;
+  }
+
+  .view-code-banner span {
+    margin-right: 8px;
   }
 }
 
