@@ -103,3 +103,32 @@
 .create-workspace-link {
   margin: 0.25rem;
 }
+
+@media (max-width: 800px) {
+  .custom-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .toolbar-title-container {
+    order: 1;
+  }
+
+  .spacer {
+    order: 2;
+  }
+
+  .custom-toolbar button[mat-icon-button] {
+    order: 3;
+  }
+
+  .view-code-container {
+    order: 4;
+    flex-basis: 100%;
+    margin: 16px 0 4px 0;
+    width: auto;
+  }
+
+  .view-code-banner {
+    margin: 0 auto;
+  }
+}
