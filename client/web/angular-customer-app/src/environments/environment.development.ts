@@ -49,4 +49,4 @@ export const environment = {
 
 console.log('env', environment);
 
-export const geminiModel = 'gemini-2.5-flash';
+export const geminiModel = 'gemini-2.0-flash';
