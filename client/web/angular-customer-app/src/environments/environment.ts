@@ -45,4 +45,4 @@ export const environment = {
   viewCodeMessage: bootstrapData?.viewCodeMessage || '',
 };
 
-export const geminiModel = "gemini-2.0-flash";
+export const geminiModel = "gemini-2.5-flash";
