@@ -70,10 +70,9 @@ export class MediaStorageService {
         throw new Error('Invalid data URI format provided.');
       }
 
-      const mimeType = match[1];
       const base64Data = match[2];
 
-      this.media.set({ base64Data, mimeType });
+      this.media.set({ base64Data, mimeType: 'image/webp' });
       console.log('Image from data URI processed and stored for the next message.');
 
     } catch (error) {
