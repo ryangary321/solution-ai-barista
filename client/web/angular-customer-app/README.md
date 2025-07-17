@@ -2,7 +2,7 @@
 
 Welcome to the AI Barista sample app, an agent-powered web app for ordering beverages! It's an Angular app built using [Firebase AI Logic](https://firebase.google.com/docs/ai-logic).
 
-AI Barista uses a Firebase AI Logic, powered by a Vertex AI model, to create an intelligent chatbot that simulates a coffee shop ordering experience. The agent is designed to understand natural language, manage a multi-turn conversation, ask clarifying questions, and build a final order.
+AI Barista uses a Firebase AI Logic, powered by Gemini, to create an intelligent chatbot that simulates a coffee shop ordering experience. The agent is designed to understand natural language, manage a multi-turn conversation, ask clarifying questions, and build a final order.
 
 The backend of AI Barista is powered by [Firebase](https://firebase.google.com/), which is Google's platform for building fullstack multi-platform apps. This app uses [Firebase Authentication](https://firebase.google.com/products/auth) for signing-in users, and [Firestore](https://firebase.google.com/products/firestore) to store order data in a NoSQL database.
 
@@ -13,7 +13,7 @@ The backend of AI Barista is powered by [Firebase](https://firebase.google.com/)
 >
 > If you want to deploy this sample app or use it as a base for a production app,
 > **we strongly recommend that you
-> [migrate to use the Vertex AI in Firebase SDK](https://github.com/FirebaseExtended/make-it-so-angular/main/README.md#migrate-to-use-vertex-ai-in-firebase),
+> [migrate to use the Gemini in Firebase AI Logic SDK](https://firebase.google.com/docs/ai-logic),
 > which offers security options against unauthorized clients.**
 
 ## Explore the app's codebase
