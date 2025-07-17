@@ -91,14 +91,14 @@ to complete some manual setup steps.
     c. Create a new Firebase web app in your new project.
     You can skip setting up Firebase Hosting.
     d. Copy your Firebase config object, and replace the placeholder values in the
-    `src/bootstrap.js` file of the sample app.
+    `client/web/angular-customer-app/src/bootstrap.js` file of the sample app.
 
 2.  Set up the Gemini API:
     a. [Get a Gemini API key](https://aistudio.google.com/app/apikey) in Google AI Studio.
     Use the Firebase project you just created.
-    b. Add your Gemini API key into the `src/bootstrap.js` file of the sample app.
+    b. Add your Gemini API key into the `client/web/angular-customer-app/src/bootstrap.js` file of the sample app.
 
-3.  Run `npm install` to install the app's dependencies.
+3.  cd to `client/web/angular-customer-app/` and run `npm install` to install the app's dependencies.
 
 4.  Serve the app:
     a. Run `ng serve` to start the Angular development server.
