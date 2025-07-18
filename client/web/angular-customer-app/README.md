@@ -6,15 +6,9 @@ AI Barista uses a Firebase AI Logic, powered by Gemini, to create an intelligent
 
 The backend of AI Barista is powered by [Firebase](https://firebase.google.com/), which is Google's platform for building fullstack multi-platform apps. This app uses [Firebase Authentication](https://firebase.google.com/products/auth) for signing-in users, and [Firestore](https://firebase.google.com/products/firestore) to store order data in a NoSQL database.
 
-> [!CAUTION] > **In its DEFAULT state, this sample app is for _EXPERIMENTATION and PROTOTYPING ONLY_.**
-> It uses the [Firebase AI Logic for JavaScript](https://firebase.google.com/docs/ai-logic)
-> directly from the client-side which means that you risk potentially exposing your
-> Gemini API key to malicious actors if you deploy this app.
->
-> If you want to deploy this sample app or use it as a base for a production app,
-> **we strongly recommend that you
-> [migrate to use the Genkit SDKs](https://genkit.dev/docs/firebase/),
-> which offers security options against unauthorized clients.**
+> [!NOTE]
+> If you want to deploy or use this as a basis for a production app,
+> **we strongly recommend that you add [Firebase App Check](https://firebase.google.com/products/app-check) to protect your app from abuse and blocking traffic without valid credentials.
 
 ## Explore the app's codebase
 - In `client/web/angular-customer-app/`, you can find the frontend customer ordering app, built with Angular.
@@ -143,11 +137,9 @@ Submit my order
 ```
 
 ## Migrate to use Genkit and Cloud Run
-As mentioned in the caution above, this sample app runs the Gemini API on the client for easy prototyping. For a real-world application, you should never call the Gemini API directly from a web client with an unsecured API key.
+This sample app is a client side version of the [AI Barista app](https://github.com/FirebaseExtended/solution-ai-barista/tree/main). This solution offers a backend approach using [Genkit](https://genkit.dev/)and [Cloud Run](https://genkit.dev/go/docs/cloud-run/) for a scalable serverless backend.
 
-This sample app is a client side version of the [AI Barista app](https://github.com/FirebaseExtended/solution-ai-barista/tree/main). This solution moves all AI logic to a secure backend using [Genkit](https://genkit.dev/), eliminating the risk of exposing your API key, and uses [Cloud Run](https://genkit.dev/go/docs/cloud-run/) for a scalable serverless backend.
-
-Checkout [AI Barista's codebase](https://github.com/FirebaseExtended/solution-ai-barista/tree/main) and the [accompanying guide](https://developers.google.com/solutions/learn/agentic-barista) if you wish to move beyond this sample.
+Checkout [AI Barista's codebase](https://github.com/FirebaseExtended/solution-ai-barista/tree/main) and the [accompanying guide](https://developers.google.com/solutions/learn/agentic-barista) if you wish to use a secured backend-driven approach.
 
 ## Delete and clean up deployed services
 
