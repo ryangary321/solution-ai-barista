@@ -43,7 +43,7 @@
           npm ci --no-audit --prefer-offline --no-progress --timing || npm i --no-audit --no-progress --timing
         '';
         default.openFiles = [
-          "README.md"
+          "client/web/angular-customer-app/README.md"
           "client/web/angular-customer-app/src/app/services/chat.service.ts"
         ];
       };
