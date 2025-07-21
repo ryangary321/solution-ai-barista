@@ -6,7 +6,6 @@ AI Barista uses a Firebase AI Logic, powered by Gemini, to create an intelligent
 
 The backend of AI Barista is powered by [Firebase](https://firebase.google.com/), which is Google's platform for building fullstack multi-platform apps. This app uses [Firebase Authentication](https://firebase.google.com/products/auth) for signing-in users, and [Firestore](https://firebase.google.com/products/firestore) to store order data in a NoSQL database.
 
-> [!NOTE]
 > If you want to deploy or use this as a basis for a production app,
 > **we strongly recommend that you add [Firebase App Check](https://firebase.google.com/products/app-check) to protect your app from abuse and blocking traffic without valid credentials.
 
