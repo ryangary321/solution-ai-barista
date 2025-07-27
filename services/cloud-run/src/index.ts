@@ -15,7 +15,6 @@
  */
 
 import express from 'express';
-import cors from 'cors';
 import { initializeApp } from 'firebase-admin/app';
 import routeHandlers from './routes';
 import logger from './logging/logger';

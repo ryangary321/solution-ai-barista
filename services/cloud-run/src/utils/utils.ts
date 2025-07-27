@@ -73,7 +73,7 @@ export function createTextResponse(textMessage: string): TextResponse {
  * Convert any input to a ChatError.
  * If an enclosed error is of a type that contains a status code, it is also extracted.
  */
-export function createChatErrorFromError(error: any): ChatError {
+export function createChatErrorFromError(error: unknown): ChatError {
 
   if (error instanceof ChatError) {
     return error;
@@ -85,8 +85,9 @@ export function createChatErrorFromError(error: any): ChatError {
 
   if (error instanceof ClientError && error.stackTrace) {
     // A ClientError from VertexAI may have some additional details in its stacktrace.
-    const statusCode = (error.stackTrace as any).code || 500;
-    return new ChatError(statusCode, error.stackTrace.message, error);
+    const stackTrace = error.stackTrace as { code?: number; message: string };
+    const statusCode = stackTrace.code || 500;
+    return new ChatError(statusCode, stackTrace.message, error as Error);
   }
 
   if (error instanceof Error) {
@@ -94,7 +95,7 @@ export function createChatErrorFromError(error: any): ChatError {
   }
   
   // Fallback to return a generic error.
-  return new ChatError(500, 'An error occured', error);
+  return new ChatError(500, 'An error occured', error as Error);
 
 }
 

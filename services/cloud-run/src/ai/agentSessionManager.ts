@@ -147,7 +147,7 @@ export class AgentSessionManager {
         const sessionId = this.auth.uid;
 
         // Return if there is no session to clear for the user.
-        if (await !this.sessionStore.has(sessionId)) {
+        if (!(await this.sessionStore.has(sessionId))) {
             return true;
         }
 
